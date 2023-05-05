@@ -1,0 +1,9 @@
+Flask-SQLAlchemy
+SQLAlchemy
+Flask
+Flask-Login
+Flask-WTF
+WTForms
+Email_Validator
+Werkzeug
+Psycopg2-Binary
