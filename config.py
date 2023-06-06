@@ -24,11 +24,9 @@ class Config(object):
 class Production(Config):
     pass
 
-
 class Development(Config):
     DEBUG = True
     SESSION_COOKIE_SECURE = False
-
 
 class Testing(Config):
     TESTING = True
