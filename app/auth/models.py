@@ -23,6 +23,7 @@ class User(CustomModel):
     from_table = Column(Integer, nullable=False)
 
     def __init__(self, name, surname, email, password, pronouns, from_table):
+        super().__init__()
         self.name = name
         self.surname = surname
         self.email = email
