@@ -1,3 +1,5 @@
+from sqlalchemy import select, literal, union_all
+
 from app import db
 
 from sqlalchemy.ext import compiler
@@ -18,7 +20,7 @@ class CreateMaterializedView(DDLElement):
 def compile(element, compiler, **kw):
     # Could use "CREATE OR REPLACE MATERIALIZED VIEW..."
     # but I'd rather have noisy errors
-    return 'CREATE MATERIALIZED VIEW %s AS %s' % (
+    return 'CREATE MATERIALIZED VIEW IF NOT EXISTS %s AS %s' % (
         element.name,
         compiler.sql_compiler.process(element.selectable, literal_binds=True),
     )
@@ -59,8 +61,10 @@ def refresh_mat_view(name, concurrently):
 
 
 def refresh_all_mat_views(concurrently=True):
-    """Refreshes all materialized views. Currently, views are refreshed in
-    non-deterministic order, so view definitions can't depend on each other."""
+    """
+    Refreshes all materialized views. Currently, views are refreshed in
+    non-deterministic order, so view definitions can't depend on each other.
+    """
     mat_views = db.inspect(db.engine).get_view_names(include='materialized')
     for v in mat_views:
         refresh_mat_view(v, concurrently)
@@ -78,40 +82,40 @@ class MaterializedView(db.Model):
 
 
 class UserMV(MaterializedView):
-    evaluator_records = db.session.query(
-        Evaluator.id,
+    evaluator_query = select(
         Evaluator.name,
         Evaluator.surname,
         Evaluator.email,
         Evaluator.password,
         Evaluator.profile_picture,
         Evaluator.bio,
-        Evaluator.pronouns
-    )
+        Evaluator.pronouns,
+        literal('evaluators').label('from_table')
+    ).select_from(Evaluator)
 
-    researcher_records = db.session.query(
-        Researcher.id,
+    researcher_query = select(
         Researcher.name,
         Researcher.surname,
         Researcher.email,
         Researcher.password,
         Researcher.profile_picture,
         Researcher.bio,
-        Researcher.pronouns
-    )
+        Researcher.pronouns,
+        literal('researchers').label('from_table')
+    ).select_from(Researcher)
 
-    admin_records = db.session.query(
-        Admin.id,
+    admin_query = select(
         Admin.name,
         Admin.surname,
         Admin.email,
         Admin.password,
         Admin.profile_picture,
         Admin.bio,
-        Admin.pronouns
-    )
+        Admin.pronouns,
+        literal('admin').label('from_table')
+    ).select_from(Admin)
 
     __table__ = create_mat_view(
         "users",
-        db.union_all(evaluator_records, researcher_records, admin_records)
+        union_all(evaluator_query, researcher_query, admin_query)
     )

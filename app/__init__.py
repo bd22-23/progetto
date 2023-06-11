@@ -1,13 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from sqlalchemy import text
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 
 
 def create_app():
-
     from app.auth.models import User
     from app.evaluators.models import Evaluator
     from app.researchers.models import Researcher
@@ -19,6 +19,9 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
+        with db.engine.connect() as connection:
+            connection.execute(text('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'))
+            connection.commit()
         db.create_all()
 
     # TODO: Register blueprints

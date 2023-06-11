@@ -1,7 +1,6 @@
-from app import login_manager, db
+from app import login_manager
 
 from sqlalchemy import Column, String
-from sqlalchemy.dialects.postgresql import UUID
 
 from app.main.models import CustomModel
 
@@ -16,7 +15,6 @@ def load_user(user_id):
 
 
 class User(CustomModel):
-    __tablename__ = 'users'
     __abstract__ = True
     name = Column(String(20), nullable=False)
     surname = Column(String(20), nullable=False)
@@ -44,6 +42,6 @@ class User(CustomModel):
         self.pronouns = pronouns
 
     # Saves the user to the database.
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
+    # def save(self, db):
+    #     db.session.add(self)
+    #     db.session.commit()
