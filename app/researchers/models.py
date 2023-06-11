@@ -1,16 +1,16 @@
-from sqlalchemy import Column, String, Integer
-
-from app import login_manager, db
+from sqlalchemy import Column, String
 
 from app.auth.models import User
-
-from app.main.models import CustomModel
 
 
 class Researcher(User):
     __tablename__ = 'researchers'
-    affiliation = Column(String)
+    affiliation = Column(String(50))
+    __mapper_args__ = {
+        'polymorphic_identity': 'researcher',
+        'with_polymorphic': '*'
+    }
 
-    def __init__(self, name, surname, email, password, pronouns, affiliation):
-        super().__init__(name, surname, email, password, pronouns, 'researchers')
+    def __init__(self, name, surname, email, password, profile_picture=None, bio=None, pronouns=None, affiliation=None):
+        super().__init__(name, surname, email, password, profile_picture, bio, pronouns)
         self.affiliation = affiliation

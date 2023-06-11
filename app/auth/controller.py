@@ -30,7 +30,6 @@ auth = Blueprint('auth', __name__, url_prefix='/auth', template_folder='template
 #     return render_template('register.html', form=form)
 
 
-
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     # if current_user.is_authenticated:

@@ -1,16 +1,16 @@
 from sqlalchemy import Column, String, Integer
 
-from app import login_manager, db
-
 from app.auth.models import User
 
-from app.main.models import CustomModel
 
+class Evaluator(User):
+    __tablename__ = 'evaluators'
+    grade = Column(String(20))
+    __mapper_args__ = {
+        'polymorphic_identity': 'evaluator',
+        'with_polymorphic': '*'
+    }
 
-class Evaluators(User):
-    __tablename__ = 'researchers'
-    grade = Column(String)
-
-    def __init__(self, name, surname, email, password, pronouns, grade):
-        super().__init__(name, surname, email, password, pronouns, 'evaluators')
+    def __init__(self, name, surname, email, password, profile_picture=None, bio=None, pronouns=None, grade=None):
+        super().__init__(name, surname, email, password, profile_picture, bio, pronouns)
         self.grade = grade

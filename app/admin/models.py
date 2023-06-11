@@ -1,21 +1,12 @@
-from sqlalchemy import Column, String, Integer
-
-from app import login_manager, db
-
 from app.auth.models import User
-
-from app.main.models import CustomModel
 
 
 class Admin(User):
-    __tablename__ = 'researchers'
+    __tablename__ = 'admins'
+    __mapper_args__ = {
+        'polymorphic_identity': 'admin',
+        'with_polymorphic': '*'
+    }
 
-    def __init__(self, name, surname, email, password, pronouns, affiliation):
-        super().__init__(name, surname, email, password, pronouns, 'admin')
-
-    def save(self):
-        """
-            Saves the user to the database.
-        """
-        db.session.add(self)
-        db.session.commit()
+    def __init__(self, name, surname, email, password, profile_picture=None, bio=None, pronouns=None):
+        super().__init__(name, surname, email, password, profile_picture, bio, pronouns)

@@ -1,5 +1,8 @@
-from sqlalchemy import Column, String, Integer
 from app import login_manager, db
+
+from sqlalchemy import Column, String
+from sqlalchemy.dialects.postgresql import UUID
+
 from app.main.models import CustomModel
 
 
@@ -11,29 +14,36 @@ def load_user(user_id):
     """
     return User.query.filter_by(id=user_id).first()
 
+
 class User(CustomModel):
     __tablename__ = 'users'
-    name = Column(String, nullable=False)
-    surname = Column(String, nullable=False)
-    email = Column(String, nullable=False, unique=True)
-    password = Column(String, nullable=False)
-    profile_picture = Column(String)
-    bio = Column(String)
-    pronouns = Column(String, nullable=False)
-    from_table = Column(Integer, nullable=False)
+    __abstract__ = True
+    name = Column(String(20), nullable=False)
+    surname = Column(String(20), nullable=False)
+    email = Column(String(20), nullable=False, unique=True)
+    password = Column(String(20), nullable=False)
+    profile_picture = Column(String(100))
+    bio = Column(String(100))
+    pronouns = Column(String(20), nullable=False)
+    type = Column(String(20), nullable=False)
 
-    def __init__(self, name, surname, email, password, pronouns, from_table):
+    __mapper_args__ = {
+        'polymorphic_identity': 'user',
+        'with_polymorphic': '*',
+        'polymorphic_on': type
+    }
+
+    def __init__(self, name, surname, email, password, profile_picture, bio, pronouns):
         super().__init__()
         self.name = name
         self.surname = surname
         self.email = email
         self.password = password
+        self.profile_picture = profile_picture
+        self.bio = bio
         self.pronouns = pronouns
-        self.from_table = from_table
 
+    # Saves the user to the database.
     def save(self):
-        """
-            Saves the user to the database.
-        """
         db.session.add(self)
         db.session.commit()

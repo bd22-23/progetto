@@ -5,13 +5,21 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 login_manager = LoginManager()
 
+
 def create_app():
+
+    from app.auth.models import User
+    from app.evaluators.models import Evaluator
+    from app.researchers.models import Researcher
+    from app.admin.models import Admin
+    from app.auth.materialized_view import UserMV
+
     app = Flask(__name__)
     app.config.from_object('config.Development')
     db.init_app(app)
 
-    # with app.app_context():
-    #     db.create_all()
+    with app.app_context():
+        db.create_all()
 
     # TODO: Register blueprints
     from app.main.controller import main
