@@ -1,6 +1,6 @@
 from sqlalchemy import DDL, event
 
-from app.auth.models import User
+from app.auth import User
 
 
 class Admin(User):

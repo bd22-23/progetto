@@ -1,8 +1,7 @@
 from app import login_manager
-
 from sqlalchemy import Column, String
 
-from app.main.models import CustomModel
+from app.main import CustomModel
 
 
 @login_manager.user_loader
@@ -40,9 +39,3 @@ class User(CustomModel):
         self.profile_picture = profile_picture
         self.bio = bio
         self.pronouns = pronouns
-
-    # Saves the user to the database.
-    # def save(self, db):
-    #     db.session.add(self)
-    #     db.session.commit()
-

@@ -1,6 +1,6 @@
-from sqlalchemy import Column, String, Integer, event, DDL
+from sqlalchemy import Column, String, event, DDL
 
-from app.auth.models import User
+from app.auth import User
 
 
 class Evaluator(User):

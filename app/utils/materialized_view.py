@@ -1,25 +1,21 @@
-from sqlalchemy import select, literal, union_all
-
-from app import db
-
+from abc import ABC
 from sqlalchemy.ext import compiler
 from sqlalchemy.schema import DDLElement, PrimaryKeyConstraint
 
-from app.admin.models import Admin
-from app.evaluators.models import Evaluator
-from app.researchers.models import Researcher
+from app import db
 
 
-class CreateMaterializedView(DDLElement):
+class CreateMaterializedView(ABC, DDLElement):
+    """
+    Create a materialized view with the given name from the given selectable.
+    """
     def __init__(self, name, selectable):
         self.name = name
         self.selectable = selectable
 
 
 @compiler.compiles(CreateMaterializedView)
-def compile(element, compiler, **kw):
-    # Could use "CREATE OR REPLACE MATERIALIZED VIEW..."
-    # but I'd rather have noisy errors
+def compile(element, compiler):
     return 'CREATE MATERIALIZED VIEW IF NOT EXISTS %s AS %s' % (
         element.name,
         compiler.sql_compiler.process(element.selectable, literal_binds=True),
@@ -27,8 +23,15 @@ def compile(element, compiler, **kw):
 
 
 def create_mat_view(name, selectable, metadata=db.metadata):
-    _mt = db.MetaData()  # temp metadata just for initial Table object creation
-    t = db.Table(name, _mt)  # the actual mat view class is bound to db.metadata
+    """
+    Creates a materialized view from a selectable.
+    :param name: name of the view
+    :param selectable: a SQLAlchemy selectable (e.g. a select() statement)
+    :param metadata: the metadata object to which the view should be added
+    :return: the view object
+    """
+    _mt = db.MetaData()
+    t = db.Table(name, _mt)
     for c in selectable.c:
         t.append_column(db.Column(c.name, c.type, primary_key=c.primary_key))
 
@@ -53,8 +56,12 @@ def create_mat_view(name, selectable, metadata=db.metadata):
 
 
 def refresh_mat_view(name, concurrently):
-    # since session.execute() bypasses auto flush, must manually flush in order
-    # to include newly-created/modified objects in the refresh
+    """
+    Refreshes a materialized view.
+    :param name: name of the view
+    :param concurrently: whether to refresh concurrently
+    :return: None
+    """
     db.session.flush()
     _con = 'CONCURRENTLY ' if concurrently else ''
     db.session.execute('REFRESH MATERIALIZED VIEW ' + _con + name)
@@ -79,43 +86,3 @@ class MaterializedView(db.Model):
         Refreshes the current materialized view
         """
         refresh_mat_view(cls.__table__.fullname, concurrently)
-
-
-class UserMV(MaterializedView):
-    evaluator_query = select(
-        Evaluator.name,
-        Evaluator.surname,
-        Evaluator.email,
-        Evaluator.password,
-        Evaluator.profile_picture,
-        Evaluator.bio,
-        Evaluator.pronouns,
-        literal('evaluators').label('from_table')
-    ).select_from(Evaluator)
-
-    researcher_query = select(
-        Researcher.name,
-        Researcher.surname,
-        Researcher.email,
-        Researcher.password,
-        Researcher.profile_picture,
-        Researcher.bio,
-        Researcher.pronouns,
-        literal('researchers').label('from_table')
-    ).select_from(Researcher)
-
-    admin_query = select(
-        Admin.name,
-        Admin.surname,
-        Admin.email,
-        Admin.password,
-        Admin.profile_picture,
-        Admin.bio,
-        Admin.pronouns,
-        literal('admin').label('from_table')
-    ).select_from(Admin)
-
-    __table__ = create_mat_view(
-        "users",
-        union_all(evaluator_query, researcher_query, admin_query)
-    )

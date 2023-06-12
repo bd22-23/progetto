@@ -10,15 +10,17 @@ login_manager = LoginManager()
 
 
 def create_app():
-    from app.auth.models import User
-    from app.evaluators.models import Evaluator
-    from app.researchers.models import Researcher
-    from app.admin.models import Admin
-    from app.auth.materialized_view import UserMV
+    from app.auth import User, UserMV
+    from app.evaluators import Evaluator
+    from app.researchers import Researcher
+    from app.admin import Admin
 
     app = Flask(__name__)
     app.config.from_object('config.Development')
     db.init_app(app)
+
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
 
     with app.app_context():
         with db.engine.connect() as connection:
