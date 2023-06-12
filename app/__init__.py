@@ -1,7 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+
 from sqlalchemy import text
+
+from app.auth.trigger import create_refresh_users_trigger
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -22,7 +25,10 @@ def create_app():
         with db.engine.connect() as connection:
             connection.execute(text('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'))
             connection.commit()
-        db.create_all()
+            db.create_all()
+        create_refresh_users_trigger(db, Admin.__tablename__)
+        create_refresh_users_trigger(db, Evaluator.__tablename__)
+        create_refresh_users_trigger(db, Researcher.__tablename__)
 
     # TODO: Register blueprints
     from app.main.controller import main
