@@ -1,9 +1,9 @@
 from sqlalchemy import DDL, event
 
-from app.auth import User
+from app.auth import AbstractUser
 
 
-class Admin(User):
+class Admin(AbstractUser):
     __tablename__ = 'admins'
     __mapper_args__ = {
         'polymorphic_identity': 'admin',

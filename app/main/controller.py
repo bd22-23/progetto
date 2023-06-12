@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template
-from app.auth import UserMV
+from app.auth import User
 
 main = Blueprint('main', __name__, template_folder='templates')
 
 
 @main.route('/')
 def index():
-    print(UserMV.query.all())
+    print(User.query.all())
     return render_template("index.html")

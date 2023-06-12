@@ -1,9 +1,9 @@
 from sqlalchemy import Column, String, DDL, event
 
-from app.auth import User
+from app.auth import AbstractUser
 
 
-class Researcher(User):
+class Researcher(AbstractUser):
     __tablename__ = 'researchers'
     affiliation = Column(String(50))
 

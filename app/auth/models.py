@@ -4,7 +4,7 @@ from sqlalchemy import Column, String
 from app.main import CustomModel
 
 
-class User(CustomModel, UserMixin):
+class AbstractUser(CustomModel, UserMixin):
     __abstract__ = True
     name = Column(String(20), nullable=False)
     surname = Column(String(20), nullable=False)

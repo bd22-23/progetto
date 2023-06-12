@@ -3,7 +3,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import db
-from app.auth import UserMV
+from app.auth import User
 from app.auth.forms import LoginForm, RegisterForm
 from app.researchers import Researcher
 
@@ -37,7 +37,7 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        user = UserMV.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first()
         if user is None:
             flash('Email or password are wrong!', 'danger')
         elif not check_password_hash(password=password, pwhash=user.password):

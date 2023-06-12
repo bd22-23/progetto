@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, ValidationError
 
-from app.auth import UserMV
+from app.auth import User
 
 
 class RegisterForm(FlaskForm):
@@ -14,7 +14,7 @@ class RegisterForm(FlaskForm):
     affiliation = StringField('Affiliazione', validators=[DataRequired()])
     submit = SubmitField('Registrati!')
     def validate_email(self, email):
-        user = UserMV.query.filter_by(email=email.data).first()
+        user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Email già presente! Scegline un\'altra.')
 
@@ -25,6 +25,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Accedi')
 
     def validate_email(self, email):
-        user = UserMV.query.filter_by(email=email.data).first()
+        user = User.query.filter_by(email=email.data).first()
         if user is None:
             raise ValidationError('Non sei registrato!')

@@ -10,7 +10,7 @@ login_manager = LoginManager()
 
 
 def create_app():
-    from app.auth import User, UserMV
+    from app.auth import AbstractUser, User
     from app.evaluators import Evaluator
     from app.researchers import Researcher
     from app.admin import Admin

@@ -1,9 +1,9 @@
 from sqlalchemy import Column, String, event, DDL
 
-from app.auth import User
+from app.auth import AbstractUser
 
 
-class Evaluator(User):
+class Evaluator(AbstractUser):
     __tablename__ = 'evaluators'
     grade = Column(String(20))
 
