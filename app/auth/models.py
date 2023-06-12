@@ -45,3 +45,4 @@ class User(CustomModel):
     # def save(self, db):
     #     db.session.add(self)
     #     db.session.commit()
+
