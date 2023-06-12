@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block app_content %}
     <!-- Includi qui il codice specifico per la pagina di login -->
     <h1>HOMEPAGE</h1>
-    <a href="{{url_for('auth.login')}}">Login</a>
+    <a href="{{ url_for('auth.login') }}">Login</a>
 
 {% endblock %}
