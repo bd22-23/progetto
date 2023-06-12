@@ -11,8 +11,6 @@ class CustomModel(db.Model):
     """
     __abstract__ = True
     id = Column(UUID(as_uuid=True),
-                # In questo modo gli UUID di default vengono creati dal DBMS
-                # usando la funzione `uuid_generate_v4()`
                 server_default=func.public.uuid_generate_v4(),
                 nullable=False, primary_key=True)
     created_at = Column(Date, nullable=False, default=datetime.datetime.now)

@@ -6,14 +6,15 @@ from app.auth import User
 class Researcher(User):
     __tablename__ = 'researchers'
     affiliation = Column(String(50))
-    __mapper_args__ = {
-        'polymorphic_identity': 'researcher',
-        'with_polymorphic': '*'
-    }
 
     def __init__(self, name, surname, email, password, profile_picture=None, bio=None, pronouns=None, affiliation=None):
         super().__init__(name, surname, email, password, profile_picture, bio, pronouns)
         self.affiliation = affiliation
+
+    def save(self, db):
+        db.session.add(self)
+        db.session.commit()
+        return self
 
 
 trigger = DDL(f"""
