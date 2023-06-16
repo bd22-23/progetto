@@ -25,7 +25,10 @@ def register():
             affiliation=form.affiliation.data
         ).save(db)
         login_user(user)
-        redirect(url_for('auth.login'))
+        redirect(url_for('main.index'))
+    else:
+        for error in form.form_errors:
+            flash(error, category='danger')
     return render_template('register.html', form=form)
 
 
@@ -35,16 +38,13 @@ def login():
         return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        email = form.email.data
-        password = form.password.data
-        user = User.query.filter_by(email=email).first()
-        if user is None:
-            flash('Email or password are wrong!', 'danger')
-        elif not check_password_hash(password=password, pwhash=user.password):
-            flash('Email or password are wrong!', 'danger')
-        else:
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is not None:
             login_user(user)
             return redirect(url_for('main.index'))
+    else:
+        for error in form.form_errors:
+            flash(error, category='danger')
     return render_template('login.html', form=form)
 
 

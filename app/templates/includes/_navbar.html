@@ -2,8 +2,16 @@
 <aside id="colorlib-aside" role="complementary" class="js-fullheight">
     <nav id="colorlib-main-menu" role="navigation">
         <ul>
-            <li class="colorlib-active"><a href="{{ url_for("main.index") }}">Home</a></li>
-            <li><a href="#">Projects</a></li>
+            <li class="colorlib-active"><a class="h1" href="{{ url_for("main.index") }}">📑 Papers</a></li>
+            <li><a href="#">Progetti</a></li>
+            {% if current_user.is_authenticated %}
+{#            <li><a href="{{ url_for("main.upload") }}">Carica</a></li>#}
+{#            <li><a href="{{ url_for("main.profile") }}">Profilo</a></li>#}
+            <li><a href="{{ url_for("auth.logout") }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for("auth.login") }}">Login</a></li>
+            <li><a href="{{ url_for("auth.register") }}">Registrazione</a></li>
+            {% endif %}
         </ul>
     </nav>
 </aside>
