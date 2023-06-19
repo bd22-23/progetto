@@ -8,7 +8,7 @@ class AbstractUser(CustomModel, UserMixin):
     __abstract__ = True
     name = Column(String(20), nullable=False)
     surname = Column(String(20), nullable=False)
-    email = Column(String(20), nullable=False, unique=True)
+    email = Column(String(50), nullable=False, unique=True)
     password = Column(String(256), nullable=False)
     profile_picture = Column(String(100))
     bio = Column(String(100))
