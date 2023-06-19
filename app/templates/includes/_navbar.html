@@ -2,16 +2,25 @@
 <aside id="colorlib-aside" role="complementary" class="js-fullheight">
     <nav id="colorlib-main-menu" role="navigation">
         <ul>
-            <li class="colorlib-active"><a class="h1" href="{{ url_for("main.index") }}">📑 Papers</a></li>
-            <li><a href="#">Progetti</a></li>
             {% if current_user.is_authenticated %}
-{#            <li><a href="{{ url_for("main.upload") }}">Carica</a></li>#}
-{#            <li><a href="{{ url_for("main.profile") }}">Profilo</a></li>#}
-            <li><a href="{{ url_for("auth.logout") }}">Logout</a></li>
+                {% set navigation_bar = [
+                    [url_for("main.index"), "main.index", "📑 Papers"],
+                    [url_for("projects.index"), "projects.index", "Progetti"],
+                    [url_for("auth.logout"), "auth.logout", "Logout"],
+                ] -%}
             {% else %}
-            <li><a href="{{ url_for("auth.login") }}">Login</a></li>
-            <li><a href="{{ url_for("auth.register") }}">Registrazione</a></li>
+                {% set navigation_bar = [
+                    [url_for("main.index"), "main.index", "📑 Papers"],
+                    [url_for("projects.index"), "projects.index", "Progetti"],
+                    [url_for("auth.login"), "auth.login", "Login"],
+                    [url_for("auth.register"), "auth.register", "Registrazione"],
+                ] -%}
             {% endif %}
+            {% for url, endpoint, label in navigation_bar %}
+            <li class="{% if request.endpoint == endpoint %}colorlib-active{% endif %}">
+                <a href="{{ url_for(endpoint) }}">{{ label }}</a>
+            </li>
+            {% endfor %}
         </ul>
     </nav>
 </aside>

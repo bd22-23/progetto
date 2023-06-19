@@ -1,10 +1,10 @@
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Hello", "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     font-size: 16px;
     line-height: 1.8;
     font-weight: normal;
-    background: #fafafa;
-    color: gray;
+    background: rgb(46, 52, 64);
+    color: rgb(236, 239, 244);
 }
 
 body.offcanvas {
@@ -18,7 +18,7 @@ body.offcanvas #colorlib-aside {
     -o-transform: translateX(0);
     transform: translateX(0);
     width: 270px;
-    background: #fff;
+    background: rgb(45, 51, 59);
     z-index: 999;
     position: fixed;
 }
@@ -37,7 +37,7 @@ a {
     -webkit-transition: .3s all ease;
     -o-transition: .3s all ease;
     transition: .3s all ease;
-    color: rgb(0, 153, 255);;
+    color: rgb(136, 192, 208);
     text-decoration: none !important;
 }
 
@@ -61,7 +61,7 @@ h5,
 .h5 {
     line-height: 1.5;
     font-weight: 400;
-    color: #000;
+    color: #fff;
 }
 
 .bg-primary {
@@ -82,7 +82,7 @@ h5,
 
 .heading-section {
     font-size: 28px;
-    color: #000;
+    color: #fff;
 }
 
 .img {
@@ -107,7 +107,7 @@ h5,
     right: 0;
     overflow-y: hidden;
     z-index: 1001;
-    background: #fff;
+    background: rgb(59, 66, 82);
     -webkit-transition: 0.5s;
     -o-transition: 0.5s;
     transition: 0.5s;
@@ -155,7 +155,7 @@ h5,
 }
 
 #colorlib-aside #colorlib-main-menu ul li a {
-    color: black;
+    color: #fff;
     text-decoration: none;
     position: relative;
     padding: 10px 0;
@@ -179,7 +179,7 @@ h5,
     bottom: 7px;
     left: 0;
     right: 0;
-    background-color: rgb(0, 153, 255);;
+    background-color: rgb(136, 192, 208);
     visibility: hidden;
     -webkit-transform: scaleX(0);
     -moz-transform: scaleX(0);
@@ -195,7 +195,7 @@ h5,
 
 #colorlib-aside #colorlib-main-menu ul li a:hover {
     text-decoration: none;
-    color: black;
+    color: rgb(236, 239, 244);
 }
 
 #colorlib-aside #colorlib-main-menu ul li a:hover:after {
@@ -208,17 +208,17 @@ h5,
 }
 
 #colorlib-aside #colorlib-main-menu ul li.colorlib-active a {
-    color: rgb(0, 153, 255);;
+    color: rgb(136, 192, 208);
 }
 
-/*#colorlib-aside #colorlib-main-menu ul li.colorlib-active a:after {*/
-/*    visibility: visible;*/
-/*    -webkit-transform: scaleX(1);*/
-/*    -moz-transform: scaleX(1);*/
-/*    -ms-transform: scaleX(1);*/
-/*    -o-transform: scaleX(1);*/
-/*    transform: scaleX(1);*/
-/*}*/
+#colorlib-aside #colorlib-main-menu ul li.colorlib-active a:after {
+    visibility: visible;
+    -webkit-transform: scaleX(1);
+    -moz-transform: scaleX(1);
+    -ms-transform: scaleX(1);
+    -o-transform: scaleX(1);
+    transform: scaleX(1);
+}
 
 #colorlib-main {
     width: 100%;
@@ -239,7 +239,7 @@ h5,
 
 @media (min-width: 992px) {
     #colorlib-main {
-        width: 80%;
+        width: 75%;
     }
 }
 
@@ -250,12 +250,12 @@ h5,
 
 .colorlib-nav-toggle.active i::before,
 .colorlib-nav-toggle.active i::after {
-    background: #000;
+    background: rgb(236, 239, 244);;
 }
 
 .colorlib-nav-toggle.dark.active i::before,
 .colorlib-nav-toggle.dark.active i::after {
-    background: #000;
+    background: rgb(236, 239, 244);;
 }
 
 .colorlib-nav-toggle:hover,
@@ -270,11 +270,11 @@ h5,
     display: inline-block;
     width: 30px;
     height: 2px;
-    color: #000;
+    color: rgb(236, 239, 244);;
     font: bold 14px/.4 Helvetica;
     text-transform: uppercase;
     text-indent: -55px;
-    background: #000;
+    background: rgb(236, 239, 244);;
     -webkit-transition: all .2s ease-out;
     -o-transition: all .2s ease-out;
     transition: all .2s ease-out;
@@ -285,7 +285,7 @@ h5,
     content: '';
     width: 30px;
     height: 2px;
-    background: #000;
+    background: rgb(236, 239, 244);;
     position: absolute;
     left: 0;
     -webkit-transition: 0.2s;
@@ -304,8 +304,8 @@ h5,
 
 .colorlib-nav-toggle.dark i {
     position: relative;
-    color: #000;
-    background: #000;
+    color: rgb(236, 239, 244);;
+    background: rgb(236, 239, 244);;
     -webkit-transition: all .2s ease-out;
     -o-transition: all .2s ease-out;
     transition: all .2s ease-out;
@@ -313,7 +313,7 @@ h5,
 
 .colorlib-nav-toggle.dark i::before,
 .colorlib-nav-toggle.dark i::after {
-    background: #000;
+    background: rgb(236, 239, 244);;
     -webkit-transition: 0.2s;
     -o-transition: 0.2s;
     transition: 0.2s;
@@ -393,4 +393,30 @@ h5,
         opacity: 1;
         visibility: visible;
     }
+}
+
+.btn-secondary {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(236, 239, 244);
+}
+
+.btn-secondary:hover {
+    border-color: rgb(121, 184, 202);
+    color: rgb(121, 184, 202);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+a:hover {
+    color: rgb(177, 226, 240);
+}
+
+.form-control,
+.form-control:focus {
+    border: 1px solid rgb(236, 239, 244, 0.5);
+    background: transparent;
+    color: rgb(236, 239, 244);
+}
+
+.form-control::placeholder {
+    color: rgb(236, 239, 244, 0.5);
 }

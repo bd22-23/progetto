@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from werkzeug.security import check_password_hash
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, ValidationError
 
@@ -54,7 +55,7 @@ class LoginForm(FlaskForm):
         if user is None:
             self.form_errors.append('Email o password errati!')
             return False
-        if not user.check_password(self.password.data):
+        if not check_password_hash(user.password, self.password.data):
             self.form_errors.append('Email o password errati!')
             return False
         return True

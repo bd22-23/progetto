@@ -7,3 +7,4 @@ WTForms
 Email_Validator
 Werkzeug
 Psycopg2-Binary
+mistune
