@@ -61,6 +61,9 @@ def create_app():
                 links.append((url, rule.endpoint))
         return links
 
+    from app.admin.controller import admin
+    app.register_blueprint(admin)
+
     def is_hidden_field_filter(field):
         return isinstance(field, wtforms.HiddenField)
 
