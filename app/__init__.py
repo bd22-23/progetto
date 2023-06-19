@@ -41,6 +41,9 @@ def create_app():
     from app.auth.controller import auth
     app.register_blueprint(auth)
 
+    from app.admin.controller import admin
+    app.register_blueprint(admin)
+
     def is_hidden_field_filter(field):
         return isinstance(field, wtforms.HiddenField)
 
