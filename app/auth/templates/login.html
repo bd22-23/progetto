@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <!-- Includi qui il codice specifico per la pagina di login -->
+    <h1>Login</h1>
+    {{ wtf.quick_form(form) }}
+    <p class="mt-2">Non hai un account? <a href="{{ url_for('auth.register') }}">Registrati</a>.</p>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}
+    {% if title %}
+        {{ title }}
+    {% else %}
+        Titolo
+    {% endif %}
+{% endblock %}
+
+{% block navbar %}
+    {% include 'includes/_navbar.html' %}
+{% endblock %}
+
+{% block content %}
+    <div id="colorlib-main" class="mt-4">
+        {% include 'includes/_messages.html' %}
+        {% block app_content %}
+        {% endblock %}
+    </div>
+{% endblock %}

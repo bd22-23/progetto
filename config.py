@@ -28,7 +28,10 @@ class Production(Config):
 class Development(Config):
     DEBUG = True
     SESSION_COOKIE_SECURE = False
+    TEMPLATES_AUTO_RELOAD = True
+    SQLALCHEMY_ECHO = True
 
 
 class Testing(Config):
     TESTING = True
+    SESSION_COOKIE_SECURE = False
