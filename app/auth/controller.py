@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, url_for, render_template, request, flash
 from flask_login import login_required, current_user, login_user, logout_user
-from werkzeug.security import check_password_hash, generate_password_hash
+
+from werkzeug.security import generate_password_hash
 
 from app import db
 from app.auth import User
@@ -22,6 +23,7 @@ def register():
             email=form.email.data,
             password=generate_password_hash(form.password.data),
             pronouns=form.pronouns.data,
+            role=form.role.data,
             affiliation=form.affiliation.data
         ).save(db)
         login_user(user)

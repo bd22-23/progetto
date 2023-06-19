@@ -1,4 +1,5 @@
 import wtforms
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -10,7 +11,7 @@ login_manager = LoginManager()
 
 
 def create_app():
-    from app.auth import AbstractUser, User
+    from app.auth import User
     from app.evaluators import Evaluator
     from app.researchers import Researcher
     from app.admin import Admin
@@ -25,13 +26,6 @@ def create_app():
     with app.app_context():
         with db.engine.connect() as connection:
             connection.execute(text('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'))
-            connection.execute(text("""
-                CREATE OR REPLACE FUNCTION refresh_users() RETURNS TRIGGER AS $$
-                BEGIN
-                    REFRESH MATERIALIZED VIEW users;
-                    RETURN NULL;
-                END; $$ LANGUAGE plpgsql;
-            """))
             connection.commit()
             db.create_all()
 

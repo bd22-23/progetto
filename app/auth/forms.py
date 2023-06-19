@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
+
 from werkzeug.security import check_password_hash
+
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email, ValidationError
+from wtforms.validators import DataRequired, Email
 
 from app.auth import User
 
@@ -21,6 +23,10 @@ class RegisterForm(FlaskForm):
         'Email',
         validators=[DataRequired("L'email è obbligatoria!"), Email("Inserisci un'email valida!")],
         render_kw={'placeholder': 'mariorossi@gmail.com'}
+    )
+    role = StringField(
+        'Ruolo',
+        render_kw={'placeholder': 'Ricercatore'}
     )
     password = PasswordField('Password', validators=[DataRequired("La password è obbligatoria!")])
     pronouns = StringField(
