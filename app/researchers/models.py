@@ -1,27 +1,27 @@
-from sqlalchemy import Column, String, DDL, event
+from sqlalchemy import Column, String, ForeignKey, UUID
 
-from app.auth import AbstractUser
+from app.auth.models import User
 
 
-class Researcher(AbstractUser):
+class Researcher(User):
     __tablename__ = 'researchers'
-    affiliation = Column(String(50))
+    id = Column(UUID(as_uuid=True), ForeignKey('users.id'), primary_key=True)
+    affiliation = Column(String, nullable=False)
+    role = Column(String)
+    pronouns = Column(String)
 
-    def __init__(self, name, surname, email, password, profile_picture=None, bio=None, pronouns=None, affiliation=None):
-        super().__init__(name, surname, email, password, profile_picture, bio, pronouns)
+    __mapper_args__ = {
+        'polymorphic_identity': 'researcher',
+        'with_polymorphic': '*'
+    }
+
+    def __init__(self, name, surname, email, password, affiliation, role=None, pronouns=None):
+        super().__init__(name, surname, email, password)
         self.affiliation = affiliation
+        self.role = role
+        self.pronouns = pronouns
 
     def save(self, db):
         db.session.add(self)
         db.session.commit()
         return self
-
-
-trigger = DDL(f"""
-    CREATE OR REPLACE TRIGGER refresh_{Researcher.__tablename__}_trigger
-    AFTER INSERT OR UPDATE OR DELETE
-    ON {Researcher.__tablename__}
-    EXECUTE PROCEDURE refresh_users();
-    """)
-
-event.listen(Researcher.__table__, 'after_create', trigger)
