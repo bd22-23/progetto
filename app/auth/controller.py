@@ -43,7 +43,14 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None:
             login_user(user)
-            return redirect(url_for('main.index'))
+            current_user.id = user.id
+            match user.type:
+                case 'admin':
+                    return redirect(url_for('admin.index'))
+                case 'evaluator':
+                    return redirect(url_for('evaluator.index'))
+                case 'researcher':
+                    return redirect(url_for('researcher.profile'))
     else:
         for error in form.form_errors:
             flash(error, category='danger')

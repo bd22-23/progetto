@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}
+    Profilo
+{% endblock %}
+{% block app_content %}
+
+    <div class="col-auto js-editable-info-area">
+        <h1><p class="d-inline-block">{{ user.name }}</p> <p class="d-inline-block">{{ user.surname }}</p></h1>
+        <div><p class="d-inline-block">{{ user.role }}</p> presso <p class="d-inline-block">"{{ user.affiliation }}"</p></div>
+        <p>{{ user.email }}</p>
+        <p>{{ user.pronouns }}</p>
+        <button class="mt-md-2 btn btn-sm btn-secondary js-edit-button mt-1" js-edit-area-id="edit-researcher-profile">Modifica</button>
+    </div>
+
+    <div class="col-md js-editable-edit-area d-none" id="edit-researcher-profile">
+        <form action="{{ url_for('researcher.profile_update', profile_id=user.id) }}" method="POST">
+            <div class="mb-2">
+                <label for="edit-researcher-name" class="form-label mb-1">Nome</label>
+                <input id="edit-researcher-name" name="name" class="form-control form-control-sm" value="{{ user.name }}">
+            </div>
+            <div class="mb-2">
+                <label for="edit-researcher-surname" class="form-label mb-1">Cognome</label>
+                <input id="edit-researcher-surname" name="surname" class="form-control form-control-sm" value="{{ user.surname }}">
+            </div>
+            <div class="mb-2">
+                <label for="edit-researcher-role" class="form-label mb-1">Ruolo</label>
+                <input id="edit-researcher-role" name="role" class="form-control form-control-sm" value="{{ user.role }}">
+            </div>
+            <div class="mb-2">
+                <label for="edit-researcher-affiliation" class="form-label mb-1">Affiliazione</label>
+                <input id="edit-researcher-affiliation" name="affiliation" class="form-control form-control-sm" value="{{ user.affiliation }}">
+            </div>
+            <div class="mb-2">
+                <label for="edit-researcher-email" class="form-label mb-1">Email</label>
+                <input id="edit-researcher-email" name="email" class="is-valid form-control form-control-sm js-auto-check-email" value="{{ user.email }}">
+                <div class="d-none js-invalid-input invalid-feedback"></div>
+            </div>
+            <div class="mb-2">
+                <label for="edit-researcher-pronouns" class="form-label mb-1">Pronomi</label>
+                <input id="edit-researcher-pronouns" name="pronouns" class="form-control form-control-sm" value="{{ user.pronouns }}">
+            </div>
+            <button class="mt-2 btn btn-sm btn-dark js-editable-stop-edit-button" type="reset">Annulla</button>
+            <button class="mt-2 btn btn-sm btn-success" type="submit">Salva</button>
+        </form>
+    </div>
+
+    <script>
+        window.onload = function () {
+            $('.js-edit-button').click(function () {
+                $(this).closest(':has(.js-editable-info-area)').find('.js-editable-info-area').addClass('d-none');
+                $('#' + $(this).attr('js-edit-area-id')).removeClass('d-none');
+            });
+            $('.js-editable-stop-edit-button').on('click', function() {
+                $(this).closest(':has(.js-editable-info-area)').find('.js-editable-info-area').removeClass('d-none');
+                $(this).closest(".js-editable-edit-area").addClass('d-none');
+            });
+        }
+    </script>
+
+{% endblock %}

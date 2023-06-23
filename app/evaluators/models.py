@@ -33,3 +33,13 @@ class Evaluator(User):
         db.session.add(self)
         db.session.commit()
         return self
+
+    def update(self, db, name, surname, email, bio, pronouns, grade=None):
+        self.name = name if name is not None else self.name
+        self.surname = surname if surname is not None else self.surname
+        self.email = email if email is not None else self.email
+        self.grade = grade if grade is not None else self.grade
+        self.bio = bio if bio is not None else self.bio
+        self.pronouns = pronouns if pronouns is not None else self.pronouns
+        db.session.commit()
+        return self

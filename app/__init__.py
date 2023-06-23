@@ -38,6 +38,15 @@ def create_app():
     from app.projects.controller import projects
     app.register_blueprint(projects)
 
+    from app.admin.controller import admin
+    app.register_blueprint(admin)
+
+    from app.evaluators.controller import evaluator
+    app.register_blueprint(evaluator)
+
+    from app.researchers.controllers import researcher
+    app.register_blueprint(researcher)
+
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()
         arguments = rule.arguments if rule.arguments is not None else ()
@@ -54,9 +63,6 @@ def create_app():
                 url = url_for(rule.endpoint, **(rule.defaults or {}))
                 links.append((url, rule.endpoint))
         return links
-
-    from app.admin.controller import admin
-    app.register_blueprint(admin)
 
     def is_hidden_field_filter(field):
         return isinstance(field, wtforms.HiddenField)

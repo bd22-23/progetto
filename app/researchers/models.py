@@ -25,3 +25,13 @@ class Researcher(User):
         db.session.add(self)
         db.session.commit()
         return self
+
+    def update(self, db, name, surname, email, affiliation, role, pronouns):
+        self.name = name if name is not None else self.name
+        self.surname = surname if surname is not None else self.surname
+        self.email = email if email is not None else self.email
+        self.affiliation = affiliation if affiliation is not None else self.affiliation
+        self.role = role if role is not None else self.role
+        self.pronouns = pronouns if pronouns is not None else self.pronouns
+        db.session.commit()
+        return self

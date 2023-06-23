@@ -420,3 +420,7 @@ a:hover {
 .form-control::placeholder {
     color: rgb(236, 239, 244, 0.5);
 }
+
+.evaluator-row:hover  {
+    cursor: pointer;
+}
