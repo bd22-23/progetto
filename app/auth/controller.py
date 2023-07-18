@@ -46,11 +46,11 @@ def login():
             current_user.id = user.id
             match user.type:
                 case 'admin':
-                    return redirect(url_for('admin.index'))
+                    return redirect(url_for('admin.index', profile_id=user.id))
                 case 'evaluator':
-                    return redirect(url_for('evaluator.index'))
+                    return redirect(url_for('evaluator.index', profile_id=user.id))
                 case 'researcher':
-                    return redirect(url_for('researcher.profile'))
+                    return redirect(url_for('researcher.profile', profile_id=user.id))
     else:
         for error in form.form_errors:
             flash(error, category='danger')

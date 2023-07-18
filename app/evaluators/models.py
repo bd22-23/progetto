@@ -1,5 +1,6 @@
 import enum
 
+from jinja2 import Template
 from sqlalchemy import Column, String, Enum, ForeignKey, UUID
 
 from app.auth.models import User
@@ -17,6 +18,9 @@ class Evaluator(User):
     bio = Column(String)
     pronouns = Column(String)
     grade = Column(Enum(Grade, values_callable=lambda x: [str(member.value) for member in Grade]), nullable=False)
+
+    template = Template('{{ Grade[db_value].value }} == {{ db_value }}')
+    template.globals['Grade'] = Grade
 
     __mapper_args__ = {
         'polymorphic_identity': 'evaluator',

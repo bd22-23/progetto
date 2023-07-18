@@ -5,12 +5,26 @@
 {% endblock %}
 {% block app_content %}
 
+    <style>
+        .profile-picture {
+            height: 50%;
+            width: auto;
+        }
+    </style>
+
     <div class="col-auto js-editable-info-area">
-        <h1><p class="d-inline-block">{{ user.name }}</p> <p class="d-inline-block">{{ user.surname }}</p></h1>
-        <div><p class="d-inline-block">{{ user.role }}</p> presso <p class="d-inline-block">"{{ user.affiliation }}"</p></div>
-        <p>{{ user.email }}</p>
-        <p>{{ user.pronouns }}</p>
-        <button class="mt-md-2 btn btn-sm btn-secondary js-edit-button mt-1" js-edit-area-id="edit-researcher-profile">Modifica</button>
+        <div class="row w-75">
+            <div class="col">
+                <h1><p class="d-inline-block">{{ user.name }}</p> <p class="d-inline-block">{{ user.surname }}</p></h1>
+                <div><p class="d-inline-block">{{ user.role }}</p> presso <p class="d-inline-block">"{{ user.affiliation }}"</p></div>
+                <p>{{ user.email }}</p>
+                <p>{{ user.pronouns }}</p>
+                <button class="mt-md-2 btn btn-sm btn-secondary js-edit-button mt-1" js-edit-area-id="edit-researcher-profile">Modifica</button>
+            </div>
+            <div class="col text-center p-0">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="user" class="rounded-circle profile-picture">
+            </div>
+        </div>
     </div>
 
     <div class="col-md js-editable-edit-area d-none" id="edit-researcher-profile">
