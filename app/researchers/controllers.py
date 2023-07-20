@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, redirect
-from flask_login import current_user
 
 from app.auth import User
 from app.researchers import Researcher

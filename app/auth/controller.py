@@ -57,6 +57,12 @@ def login():
     return render_template('login.html', form=form)
 
 
+@auth.route('/delete/<user_id>')
+def delete_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    user.delete(db)
+    return redirect(url_for('admin.index'))
+
 @auth.route('/logout')
 @login_required
 def logout():

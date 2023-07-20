@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
 
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import Email
 
 
-class EditProfileForm(FlaskForm):
+class NewProfileForm(FlaskForm):
 
     name = StringField(
         'Nome'
@@ -12,11 +12,8 @@ class EditProfileForm(FlaskForm):
     surname = StringField(
         'Cognome'
     )
-    role = StringField(
-        'Ruolo'
-    )
-    affiliation = StringField(
-        'Affiliazione'
+    bio = StringField(
+        'Bio'
     )
     pronouns = StringField(
         'Pronomi'
@@ -25,4 +22,7 @@ class EditProfileForm(FlaskForm):
         'Email',
         validators=[Email("Inserisci un'email valida!")]
     )
-    submit = SubmitField('Salva')
+    password = PasswordField(
+        'Password'
+    )
+    submit = SubmitField('Crea')
