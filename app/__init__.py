@@ -15,6 +15,7 @@ def create_app():
     from app.evaluators import Evaluator
     from app.researchers import Researcher
     from app.admin import Admin
+    from app.projects import Project
 
     app = Flask(__name__)
     app.config.from_object('config.Development')
