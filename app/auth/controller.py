@@ -27,7 +27,7 @@ def register():
             affiliation=form.affiliation.data
         ).save(db)
         login_user(user)
-        redirect(url_for('main.index'))
+        return redirect(url_for('main.index'))
     else:
         for error in form.form_errors:
             flash(error, category='danger')
@@ -46,7 +46,7 @@ def login():
             current_user.id = user.id
             match user.type:
                 case 'admin':
-                    return redirect(url_for('admin.index', profile_id=user.id))
+                    return redirect(url_for('main.index', profile_id=user.id))
                 case 'evaluator':
                     return redirect(url_for('evaluator.index', profile_id=user.id))
                 case 'researcher':

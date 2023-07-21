@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+    Pannello Admin
+{% endblock %}
+{% block app_content %}
+    <!-- Includi qui il codice specifico per la pagina di login -->
+    <div class="container">
+        <h1>Ricercatori</h1>
+
+        <div>{{ researcher_table }}</div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const researcherRows = document.querySelectorAll('#researcher-table tr');
+
+            // Evento onclick per le righe della tabella Researcher
+            for (let j = 1; j < researcherRows.length; j++) {
+                (function(j) {
+                    researcherRows[j].addEventListener('click', function() {
+                        const id = researcherRows[j].id;
+                        window.location.href = "{{ url_for('researcher.profile', profile_id='TEMP') }}"
+                            .replace("TEMP", id);
+                    });
+                })(j);
+            }
+        });
+    </script>
+{% endblock %}

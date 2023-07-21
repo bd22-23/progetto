@@ -1,25 +1,58 @@
-<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
-<aside id="colorlib-aside" role="complementary" class="js-fullheight">
-    <nav id="colorlib-main-menu" role="navigation">
+<a href="#" class="js-nav-toggle nav-toggle"><i></i></a>
+<aside role="complementary" class="aside js-fullheight">
+    <nav class="side-nav" role="navigation">
         <ul>
             {% if current_user.is_authenticated %}
                 {% set navigation_bar = [
-                    [url_for("main.index"), "main.index", "📑 Papers"],
-                    [url_for("projects.index"), "projects.index", "Progetti"],
-                    [url_for("auth.logout"), "auth.logout", "Logout"],
+                    ["main.index", "📑 Papers"],
+                    ["projects.index", "Progetti"]
+                ] -%}
+                {% if current_user.type == 'admin' %}
+                    {% set navigation_bar = navigation_bar + [
+                        [None, "Admin Panel", [
+                            ["admin.evaluators", "Valutatori"],
+                            ["admin.researchers", "Ricercatori"],
+                        ]],
+                    ] -%}
+                {% endif %}
+                {% set navigation_bar = navigation_bar + [
+                    ["auth.logout", "Logout"],
                 ] -%}
             {% else %}
                 {% set navigation_bar = [
-                    [url_for("main.index"), "main.index", "📑 Papers"],
-                    [url_for("projects.index"), "projects.index", "Progetti"],
-                    [url_for("auth.login"), "auth.login", "Login"],
-                    [url_for("auth.register"), "auth.register", "Registrazione"],
+                    ["main.index", "📑 Papers"],
+                    ["projects.index", "Progetti"],
+                    ["auth.login", "Login"],
+                    ["auth.register", "Registrazione"],
                 ] -%}
             {% endif %}
-            {% for url, endpoint, label in navigation_bar %}
-            <li class="{% if request.endpoint == endpoint %}colorlib-active{% endif %}">
-                <a href="{{ url_for(endpoint) }}">{{ label }}</a>
-            </li>
+            {% for item in navigation_bar %}
+                {% if item|length == 3 %}
+                    {% set endpoint, label, submenu = item %}
+                {% else %}
+                    {% set endpoint, label = item %}
+                    {% set submenu = None %}
+                {% endif %}
+                <li class="nav-item {% if request.endpoint == endpoint %}active{% endif %} {% if submenu %}sub-nav-activator{% endif %} ">
+                    {% if submenu  %}
+                        <a href="#" >
+                            {{ label }}
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for(endpoint) }}">{{ label }}</a>
+                    {% endif %}
+                    {% if submenu %}
+                        <div class="sub-nav">
+                            <ul>
+                                {% for sub_endpoint, sub_label in submenu %}
+                                <li class="sub-nav-item{% if request.endpoint == sub_endpoint %}active{% endif %}">
+                                    <a href="{{ url_for(sub_endpoint) }}">{{ sub_label }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </li>
             {% endfor %}
         </ul>
     </nav>

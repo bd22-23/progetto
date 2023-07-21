@@ -5,11 +5,11 @@ from flask_table import Table, Col
 class DeleteAccountCol(Col):
     def td_contents(self, item, attr_list):
         delete_url = url_for('auth.delete_user', user_id=item.id)
-        return f'<a href="{delete_url}" class="btn btn-block btn-danger"><span class="bi bi-trash"></span></a>'.format(item.id)
+        return f'<a href="{delete_url}" class="btn btn-block btn-danger btn-sm"><span class="bi bi-trash"></span></a>'
 
 
 class EvaluatorTable(Table):
-    classes = ['table', 'table-hover', 'table-striped', 'table-dark']
+    classes = ['table', 'table-dark']
     table_id = 'evaluator-table'
     id = Col('Id', show=False)
     name = Col('Nome')
@@ -22,7 +22,7 @@ class EvaluatorTable(Table):
 
 
 class ResearcherTable(Table):
-    classes = ['table', 'table-hover', 'table-striped', 'table-dark']
+    classes = ['table', 'table-dark']
     table_id = 'researcher-table'
     id = Col('Id', show=False)
     name = Col('Nome')
