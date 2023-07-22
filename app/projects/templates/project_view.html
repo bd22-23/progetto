@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ project.name }}
+{% endblock %}
+{% block app_content %}
+
+    <style>
+        .light-blue {
+            background-color: rgb(136, 192, 208);
+        }
+        .clickable-row:hover {
+            cursor: pointer;
+        }
+        .hide-header-text {
+            font-size: 0;
+            line-height: 0;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 0;
+            visibility: hidden;
+        }
+    </style>
+
+    <p>
+        <span class="badge rounded-pill light-blue text-muted">#tag1</span>
+        <span class="badge rounded-pill light-blue text-muted">#tag2</span>
+        <span class="badge rounded-pill light-blue text-muted">#tag3</span>
+        <span class="badge rounded-pill light-blue text-muted">#tag4</span>
+        <span class="badge rounded-pill light-blue text-muted">#tag5</span>
+    </p>
+    <h1>{{ project.name }}</h1>
+    <h6><a href="">Mario Rossi</a>, <a href="">Luigi Verdi</a>, <a href="">Marco Zarti</a></h6><br>
+    <hr class="solid"><br>
+    <h3>Abstract</h3><br>
+    <p>{{ project.abstract }}</p><br>
+
+{% endblock %}

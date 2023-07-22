@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}
+    Progetti
+{% endblock %}
+{% block app_content %}
+
+    <style>
+        .clickable-row:hover {
+            cursor: pointer;
+        }
+        .hide-header-text {
+            font-size: 0;
+            line-height: 0;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 0;
+            visibility: hidden;
+        }
+        .list-group-item {
+            background-color: transparent;
+            color: #fff;
+        }
+    </style>
+
+    <h1>Progetti</h1><br>
+    <input class="form-control" id="searchInput" type="text" placeholder="Cerca... 🔍"><br>
+    <div>{{ project_table }}</div><br>
+
+    <script>
+        $(document).ready(function() {
+            $("#searchInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#project_table tbody tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+{% endblock %}
