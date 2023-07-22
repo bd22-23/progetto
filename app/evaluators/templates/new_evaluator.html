@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
 {% block title %}
-    Registrazione
+    Nuovo Valutatore
 {% endblock %}
 {% block app_content %}
-    <h1>Registrazione</h1>
+    <h1>Nuovo Valutatore</h1>
     {{ wtf.quick_form(form) }}
-    <p class="mt-2">Sei già registrato? <a href="{{ url_for('auth.login') }}">Accedi</a>.</p>
 {% endblock %}

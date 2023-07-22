@@ -11,7 +11,7 @@ body.offcanvas {
     overflow-x: hidden;
 }
 
-body.offcanvas #colorlib-aside {
+body.offcanvas .aside {
     -moz-transform: translateX(0);
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
@@ -23,8 +23,8 @@ body.offcanvas #colorlib-aside {
     position: fixed;
 }
 
-body.offcanvas #colorlib-main,
-body.offcanvas .colorlib-nav-toggle {
+body.offcanvas .main,
+body.offcanvas .nav-toggle {
     top: 0;
     -moz-transform: translateX(270px);
     -webkit-transform: translateX(270px);
@@ -61,7 +61,6 @@ h5,
 .h5 {
     line-height: 1.5;
     font-weight: 400;
-    color: #fff;
 }
 
 .bg-primary {
@@ -82,7 +81,7 @@ h5,
 
 .heading-section {
     font-size: 28px;
-    color: #fff;
+    color: rgb(236, 239, 244);
 }
 
 .img {
@@ -91,13 +90,13 @@ h5,
     background-position: center center;
 }
 
-#colorlib-page {
+.page {
     width: 100%;
     overflow: hidden;
     position: relative;
 }
 
-#colorlib-aside {
+.aside {
     padding: 3em 3em 40px;
     width: 20%;
     position: fixed;
@@ -114,7 +113,7 @@ h5,
 }
 
 @media (prefers-reduced-motion: reduce) {
-    #colorlib-aside {
+    .aside {
         -webkit-transition: none;
         -o-transition: none;
         transition: none;
@@ -122,13 +121,13 @@ h5,
 }
 
 @media (min-width: 992px) {
-    #colorlib-aside {
+    .aside {
         width: 20%;
     }
 }
 
 @media (max-width: 992px) {
-    #colorlib-aside {
+    .aside {
         width: 270px;
         -moz-transform: translateX(-270px);
         -webkit-transform: translateX(-270px);
@@ -140,12 +139,12 @@ h5,
     }
 }
 
-#colorlib-aside #colorlib-main-menu ul {
+.aside .side-nav ul {
     margin: 0;
     padding: 0;
 }
 
-#colorlib-aside #colorlib-main-menu ul li {
+.aside .side-nav ul li {
     margin: 0 0 10px 0;
     padding: 0;
     list-style: none;
@@ -154,8 +153,8 @@ h5,
     line-height: 1.5;
 }
 
-#colorlib-aside #colorlib-main-menu ul li a {
-    color: #fff;
+.aside .side-nav ul li a {
+    color: rgb(236, 239, 244);
     text-decoration: none;
     position: relative;
     padding: 10px 0;
@@ -165,14 +164,14 @@ h5,
 }
 
 @media (prefers-reduced-motion: reduce) {
-    #colorlib-aside #colorlib-main-menu ul li a {
+    .aside .side-nav ul li a {
         -webkit-transition: none;
         -o-transition: none;
         transition: none;
     }
 }
 
-#colorlib-aside #colorlib-main-menu ul li a:after {
+.aside .side-nav ul li a:after {
     content: "";
     position: absolute;
     height: 2px;
@@ -193,12 +192,12 @@ h5,
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-#colorlib-aside #colorlib-main-menu ul li a:hover {
+.aside .side-nav ul li a:hover {
     text-decoration: none;
     color: rgb(236, 239, 244);
 }
 
-#colorlib-aside #colorlib-main-menu ul li a:hover:after {
+.aside .side-nav ul li a:hover:after {
     visibility: visible;
     -webkit-transform: scaleX(1);
     -moz-transform: scaleX(1);
@@ -207,11 +206,11 @@ h5,
     transform: scaleX(1);
 }
 
-#colorlib-aside #colorlib-main-menu ul li.colorlib-active a {
+.aside .side-nav ul li.active a {
     color: rgb(136, 192, 208);
 }
 
-#colorlib-aside #colorlib-main-menu ul li.colorlib-active a:after {
+.aside .side-nav ul li.active a:after {
     visibility: visible;
     -webkit-transform: scaleX(1);
     -moz-transform: scaleX(1);
@@ -220,7 +219,7 @@ h5,
     transform: scaleX(1);
 }
 
-#colorlib-main {
+.main {
     width: 100%;
     float: right;
     -webkit-transition: 0.5s;
@@ -230,7 +229,7 @@ h5,
 }
 
 @media (prefers-reduced-motion: reduce) {
-    #colorlib-main {
+    .main {
         -webkit-transition: none;
         -o-transition: none;
         transition: none;
@@ -238,34 +237,34 @@ h5,
 }
 
 @media (min-width: 992px) {
-    #colorlib-main {
+    .main {
         width: 75%;
     }
 }
 
-.colorlib-nav-toggle {
+.nav-toggle {
     cursor: pointer;
     text-decoration: none;
 }
 
-.colorlib-nav-toggle.active i::before,
-.colorlib-nav-toggle.active i::after {
+.nav-toggle.active i::before,
+.nav-toggle.active i::after {
     background: rgb(236, 239, 244);;
 }
 
-.colorlib-nav-toggle.dark.active i::before,
-.colorlib-nav-toggle.dark.active i::after {
+.nav-toggle.dark.active i::before,
+.nav-toggle.dark.active i::after {
     background: rgb(236, 239, 244);;
 }
 
-.colorlib-nav-toggle:hover,
-.colorlib-nav-toggle:focus,
-.colorlib-nav-toggle:active {
+.nav-toggle:hover,
+.nav-toggle:focus,
+.nav-toggle:active {
     outline: none;
     border-bottom: none !important;
 }
 
-.colorlib-nav-toggle i {
+.nav-toggle i {
     position: relative;
     display: inline-block;
     width: 30px;
@@ -280,8 +279,8 @@ h5,
     transition: all .2s ease-out;
 }
 
-.colorlib-nav-toggle i::before,
-.colorlib-nav-toggle i::after {
+.nav-toggle i::before,
+.nav-toggle i::after {
     content: '';
     width: 30px;
     height: 2px;
@@ -294,15 +293,15 @@ h5,
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .colorlib-nav-toggle i::before,
-    .colorlib-nav-toggle i::after {
+    .nav-toggle i::before,
+    .nav-toggle i::after {
         -webkit-transition: none;
         -o-transition: none;
         transition: none;
     }
 }
 
-.colorlib-nav-toggle.dark i {
+.nav-toggle.dark i {
     position: relative;
     color: rgb(236, 239, 244);;
     background: rgb(236, 239, 244);;
@@ -311,8 +310,8 @@ h5,
     transition: all .2s ease-out;
 }
 
-.colorlib-nav-toggle.dark i::before,
-.colorlib-nav-toggle.dark i::after {
+.nav-toggle.dark i::before,
+.nav-toggle.dark i::after {
     background: rgb(236, 239, 244);;
     -webkit-transition: 0.2s;
     -o-transition: 0.2s;
@@ -320,35 +319,35 @@ h5,
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .colorlib-nav-toggle.dark i::before,
-    .colorlib-nav-toggle.dark i::after {
+    .nav-toggle.dark i::before,
+    .nav-toggle.dark i::after {
         -webkit-transition: none;
         -o-transition: none;
         transition: none;
     }
 }
 
-.colorlib-nav-toggle i::before {
+.nav-toggle i::before {
     top: -7px;
 }
 
-.colorlib-nav-toggle i::after {
+.nav-toggle i::after {
     bottom: -7px;
 }
 
-.colorlib-nav-toggle:hover i::before {
+.nav-toggle:hover i::before {
     top: -10px;
 }
 
-.colorlib-nav-toggle:hover i::after {
+.nav-toggle:hover i::after {
     bottom: -10px;
 }
 
-.colorlib-nav-toggle.active i {
+.nav-toggle.active i {
     background: transparent;
 }
 
-.colorlib-nav-toggle.active i::before {
+.nav-toggle.active i::before {
     top: 0;
     -webkit-transform: rotateZ(45deg);
     -moz-transform: rotateZ(45deg);
@@ -357,7 +356,7 @@ h5,
     transform: rotateZ(45deg);
 }
 
-.colorlib-nav-toggle.active i::after {
+.nav-toggle.active i::after {
     bottom: 0;
     -webkit-transform: rotateZ(-45deg);
     -moz-transform: rotateZ(-45deg);
@@ -366,7 +365,7 @@ h5,
     transform: rotateZ(-45deg);
 }
 
-.colorlib-nav-toggle {
+.nav-toggle {
     position: fixed;
     left: -12px;
     top: 0;
@@ -381,7 +380,7 @@ h5,
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .colorlib-nav-toggle {
+    .nav-toggle {
         -webkit-transition: none;
         -o-transition: none;
         transition: none;
@@ -389,10 +388,17 @@ h5,
 }
 
 @media (max-width: 992px) {
-    .colorlib-nav-toggle {
+    .nav-toggle {
         opacity: 1;
         visibility: visible;
     }
+}
+
+.sub-nav {
+    margin-top: 4px;
+    margin-left: 16px;
+    display: none;
+    margin-bottom: 4px;
 }
 
 .btn-secondary {
@@ -420,3 +426,56 @@ a:hover {
 .form-control::placeholder {
     color: rgb(236, 239, 244, 0.5);
 }
+
+.table th,
+.table td {
+    background: none;
+    border: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-radius: 8px;
+    border-style: hidden;
+    box-shadow: 0 0 0 1px rgb(236, 239, 244, 0.5);
+}
+
+table tr {
+    border: 1px solid rgb(236, 239, 244, 0.5);
+}
+
+table tr:not(:last-child):hover {
+    background-color: transparent;
+}
+
+table tr:hover {
+    background-color: rgb(236, 239, 244, 0.1);
+    cursor: pointer;
+}
+
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+td {
+    border: 1px solid rgb(236, 239, 244, 0.5);
+}
+
+.btn-primary {
+    color: #2d333b;
+    background-color: rgb(121, 184, 202);
+    border-color: rgb(121, 184, 202);
+}
+
+.btn-primary:hover {
+    background-color: #427380;
+    border-color: #427380;
+}
+
+
+
+
