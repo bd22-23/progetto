@@ -5,13 +5,13 @@
             {% if current_user.is_authenticated %}
                 {% set navigation_bar = [
                     [url_for("main.index"), "main.index", "📑 Papers"],
-                    [url_for("projects.index"), "projects.index", "Progetti"],
+                    [url_for("project.project_list"), "project.project_list", "Progetti"],
                     [url_for("auth.logout"), "auth.logout", "Logout"],
                 ] -%}
             {% else %}
                 {% set navigation_bar = [
                     [url_for("main.index"), "main.index", "📑 Papers"],
-                    [url_for("projects.index"), "projects.index", "Progetti"],
+                    [url_for("project.project_list"), "project.project_list", "Progetti"],
                     [url_for("auth.login"), "auth.login", "Login"],
                     [url_for("auth.register"), "auth.register", "Registrazione"],
                 ] -%}

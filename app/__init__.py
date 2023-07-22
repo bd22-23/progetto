@@ -16,6 +16,8 @@ def create_app():
     from app.researchers import Researcher
     from app.admin import Admin
     from app.projects import Project
+    from app.tags import Tags
+    from app.project_tags import ProjectTags
 
     app = Flask(__name__)
     app.config.from_object('config.Development')
@@ -36,8 +38,8 @@ def create_app():
     from app.auth.controller import auth
     app.register_blueprint(auth)
 
-    from app.projects.controller import projects
-    app.register_blueprint(projects)
+    from app.projects.controller import project
+    app.register_blueprint(project)
 
     from app.admin.controller import admin
     app.register_blueprint(admin)
