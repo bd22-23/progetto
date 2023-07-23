@@ -63,6 +63,7 @@ def delete_user(user_id):
     user.delete(db)
     return redirect(url_for('admin.index'))
 
+
 @auth.route('/logout')
 @login_required
 def logout():

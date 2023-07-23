@@ -29,11 +29,6 @@ class Evaluator(User):
         self.bio = bio
         self.pronouns = pronouns
 
-    def save(self, db):
-        db.session.add(self)
-        db.session.commit()
-        return self
-
     def update(self, db, name, surname, email, bio, pronouns, grade=None):
         self.name = name if name is not None else self.name
         self.surname = surname if surname is not None else self.surname

@@ -15,9 +15,7 @@ def create_app():
     from app.evaluators import Evaluator
     from app.researchers import Researcher
     from app.admin import Admin
-    from app.projects import Project
-    from app.tags import Tags
-    from app.project_tags import ProjectTags
+    from app.projects import Project, ProjectTags, Tags
     from app.authors import Authors
 
     app = Flask(__name__)

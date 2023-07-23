@@ -12,7 +12,7 @@ from app.tags import Tags
 
 project = Blueprint('project', __name__, url_prefix='/project', template_folder='templates')
 
-7
+
 @project.route('/list', methods=['GET', 'POST'])
 def project_list():
     projects = Project.query.all()
