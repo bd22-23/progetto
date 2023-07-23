@@ -23,14 +23,16 @@
     </style>
 
     <p>
-        <span class="badge rounded-pill light-blue text-muted">#tag1</span>
-        <span class="badge rounded-pill light-blue text-muted">#tag2</span>
-        <span class="badge rounded-pill light-blue text-muted">#tag3</span>
-        <span class="badge rounded-pill light-blue text-muted">#tag4</span>
-        <span class="badge rounded-pill light-blue text-muted">#tag5</span>
+        {% for tag in tags %}
+            <span class="badge rounded-pill light-blue text-muted">#{{ tag }}</span>
+        {% endfor %}
     </p>
     <h1>{{ project.name }}</h1>
-    <h6><a href="">Mario Rossi</a>, <a href="">Luigi Verdi</a>, <a href="">Marco Zarti</a></h6><br>
+    <h6>
+        {% for author in authors %}
+            <a href="{{ url_for('researcher.profile', profile_id=author.id) }}">{{ author.name }} {{ author.surname }}</a>{% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </h6><br>
     <hr class="solid"><br>
     <h3>Abstract</h3><br>
     <p>{{ project.abstract }}</p><br>

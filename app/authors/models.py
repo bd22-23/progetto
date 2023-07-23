@@ -4,10 +4,10 @@ from sqlalchemy.dialects.postgresql import UUID
 from app import db
 
 
-class ProjectTags(db.Model):
-    __tablename__ = 'project_tags'
+class Authors(db.Model):
+    __tablename__ = 'authors'
     project = Column(UUID(as_uuid=True), ForeignKey('projects.id'), primary_key=True)
-    tag = Column(UUID(as_uuid=True), ForeignKey('tags.id'), primary_key=True)
+    researcher = Column(UUID(as_uuid=True), ForeignKey('researchers.id'), primary_key=True)
     created_at = Column(Date, nullable=False, default=datetime.datetime.now)
 
     def __init__(self):
@@ -23,9 +23,9 @@ class ProjectTags(db.Model):
         db.session.commit()
         return self
 
-    def new(self, db, project, tag):
+    def new(self, db, project, researcher):
         self.project = project
-        self.tag = tag
+        self.researcher = researcher
         db.session.add(self)
         db.session.commit()
         return self

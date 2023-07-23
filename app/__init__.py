@@ -18,6 +18,7 @@ def create_app():
     from app.projects import Project
     from app.tags import Tags
     from app.project_tags import ProjectTags
+    from app.authors import Authors
 
     app = Flask(__name__)
     app.config.from_object('config.Development')
@@ -47,7 +48,7 @@ def create_app():
     from app.evaluators.controller import evaluator
     app.register_blueprint(evaluator)
 
-    from app.researchers.controllers import researcher
+    from app.researchers.controller import researcher
     app.register_blueprint(researcher)
 
     def has_no_empty_params(rule):

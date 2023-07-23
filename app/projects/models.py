@@ -1,10 +1,9 @@
-from sqlalchemy import Column, String, UUID
+from sqlalchemy import Column, String
 from app.main import CustomModel
 
 
 class Project(CustomModel):
     __tablename__ = 'projects'
-    id = Column(UUID(as_uuid=True), primary_key=True)
     name = Column(String, nullable=False)
     abstract = Column(String, nullable=False)
 
