@@ -17,4 +17,4 @@ class NewProjectForm(FlaskForm):
 
     def __init__(self, tags):
         super().__init__()
-        self.tags.choices = [(str(tag.id), tag.name) for tag in tags]
+        self.tags.choices = [(str(tag.id), tag.value) for tag in tags]

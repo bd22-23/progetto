@@ -3,36 +3,62 @@
     Progetti
 {% endblock %}
 {% block app_content %}
+    <h1 class="mb-4">
+        Progetti
+        {% if tag %}
+            <span class="badge rounded-pill tag-pill" style="font-size: 20px; display:inline-block; vertical-align: middle;">{{ tag }}</span>
+        {% endif %}
+    </h1>
 
-    <style>
-        .clickable-row:hover {
-            cursor: pointer;
-        }
-        .hide-header-text {
-            font-size: 0;
-            line-height: 0;
-            padding: 0;
-            border: 0;
-            margin: 0;
-            height: 0;
-            visibility: hidden;
-        }
-        .list-group-item {
-            background-color: transparent;
-            color: #fff;
-        }
-    </style>
+    <div class="search-panel">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="search-input-addon">🔍</span>
+            <input type="text" id="searchInput" class="form-control" placeholder="Cerca..." aria-label="search" aria-describedby="search-input-addon" >
+        </div>
+    </div>
 
-    <h1>Progetti</h1><br>
-    <input class="form-control" id="searchInput" type="text" placeholder="Cerca... 🔍"><br>
-    <div>{{ project_table }}</div><br>
+    <div class="projects-list">
+        <ul class="ps-0">
+        {% for project in projects %}
+            <div class="row">
+                <div class="col">
+                    <div class="mb-5">
+                        <p class="mb-2">
+                            {% for tag in project.tags %}
+                                <span class="badge rounded-pill tag-pill">
+                                    <a href="{{ url_for('project.list', tag=tag.value) }}">{{ tag.value }}</a>
+                                </span>
+                            {% endfor %}
+                        </p>
+                        <h4 class="link-underline mb-3">
+                            <i class="bi bi-check-circle accepted"></i>
+                            <a href="{{ url_for('project.view', project_id=project.id) }}">{{ project.title }}</a>
+                        </h4>
+                        <h6 class="mb-3">
+                        {% for author in project.authors %}
+                            <a href="{{ url_for('researcher.profile', profile_id=author.id) }}">{{ author.name }} {{ author.surname }}</a>{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </ul>
+    </div>
 
     <script>
-        $(document).ready(function() {
-            $("#searchInput").on("keyup", function() {
-                var value = $(this).val().toLowerCase();
-                $("#project_table tbody tr").filter(function() {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        $(document).ready(function () {
+            $('#searchInput').on('input', function () {
+                const searchText = $(this).val().toLowerCase().trim();
+                $('.projects-list .mb-5').each(function () {
+                    const title = $(this).find('h4 a').text().toLowerCase();
+                    const authors = $(this).find('h6 a').text().toLowerCase();
+
+                    if (title.indexOf(searchText) !== -1 || authors.indexOf(searchText) !== -1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
                 });
             });
         });

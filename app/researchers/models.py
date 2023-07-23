@@ -1,6 +1,8 @@
 from sqlalchemy import Column, String, ForeignKey, UUID, Date
 import datetime
 
+from sqlalchemy.orm import relationship
+
 from app.auth.models import User
 from app.main import CustomModel
 
@@ -11,6 +13,7 @@ class Researcher(User):
     affiliation = Column(String, nullable=False)
     role = Column(String)
     pronouns = Column(String)
+    projects = relationship('Project', secondary='authors', backref='researcher', lazy=True)
 
     __mapper_args__ = {
         'polymorphic_identity': 'researcher',

@@ -1,4 +1,3 @@
-import datetime
 from sqlalchemy import Column, Date, func
 from sqlalchemy.dialects.postgresql import UUID
 from app import db

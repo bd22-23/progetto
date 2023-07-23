@@ -1,39 +1,38 @@
-from flask import Blueprint, render_template, url_for, redirect
+from flask import Blueprint, render_template, url_for, redirect, request
 from flask_login import current_user, login_required
 
 from app import db
 from app.auth import User
-from app.researchers import Author
+from app.researchers import Author, Researcher
 from app.projects import Project, ProjectTag, Tag
 from app.projects.forms import NewProjectForm
-from app.projects.tables import ProjectTable
 
 project = Blueprint('project', __name__, url_prefix='/project', template_folder='templates')
 
 
 @project.route('/list', methods=['GET', 'POST'])
 def list():
-    projects = Project.query.all()
-    table = ProjectTable(projects)
-    return render_template('project_list.html', project_table=table)
+    tag = request.args.get('tag')
+    query = Project.query \
+        .join(Author, Author.project == Project.id) \
+        .join(ProjectTag, ProjectTag.project == Project.id) \
+        .join(Tag, Tag.id == ProjectTag.tag) \
+        .filter(ProjectTag.project == Project.id)
+    if tag:
+        query = query.filter(Tag.value == tag)
+    projects = query.all()
+    return render_template('project_list.html', projects=projects, tag=tag)
 
 
 @project.route('/view/<project_id>', methods=['GET', 'POST'])
 def view(project_id):
-    proj = Project.query.filter_by(id=project_id).first()
-    tag_query = db.session.query(Tag.name).join(ProjectTag, ProjectTag.tag == Tag.id).filter(
-        ProjectTag.project == project_id).all()
-    tags = [tag[0] for tag in tag_query]
-    author_query = db.session.query(User.id, User.name, User.surname).join(
-        Author, Author.researcher == User.id).filter(Author.project == project_id).all()
-    authors = [
-        {
-            'id': str(author.id),
-            'name': author.name,
-            'surname': author.surname
-        } for author in author_query
-    ]
-    return render_template('project_view.html', project=proj, tags=tags, authors=authors)
+    proj = Project.query \
+        .join(Author, Author.project == Project.id) \
+        .join(ProjectTag, ProjectTag.project == Project.id) \
+        .join(Tag, Tag.id == ProjectTag.tag) \
+        .filter(Project.id == project_id) \
+        .first()
+    return render_template('project_view.html', project=proj)
 
 
 @login_required

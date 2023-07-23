@@ -1,4 +1,6 @@
 from sqlalchemy import Column, String, UUID, ForeignKey
+from sqlalchemy.orm import relationship
+
 from app.main import CustomModel
 
 
@@ -6,6 +8,8 @@ class Project(CustomModel):
     __tablename__ = 'projects'
     title = Column(String, nullable=False)
     abstract = Column(String, nullable=False)
+    authors = relationship('Researcher', secondary='authors', backref='project_author', lazy=True)
+    tags = relationship('Tag', secondary='project_tags', backref='project_tag', lazy=True)
 
     def __init__(self, title, abstract):
         super().__init__()
@@ -32,7 +36,8 @@ class ProjectTag(CustomModel):
 
 class Tag(CustomModel):
     __tablename__ = 'tags'
-    name = Column(String, nullable=False)
+    value = Column(String, nullable=False)
+    project = relationship('Project', secondary='project_tags', backref='tag', lazy=True)
 
     def __init__(self, name):
         super().__init__()

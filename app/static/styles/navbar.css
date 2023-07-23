@@ -227,11 +227,17 @@ h5,
 
 .main {
     width: 100%;
-    float: right;
+    margin-left: 25%;
     -webkit-transition: 0.5s;
     -o-transition: 0.5s;
     transition: 0.5s;
     padding: 40px;
+}
+
+@media screen and (max-width: 992px) {
+    .main {
+        margin-left: 0;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -450,10 +456,6 @@ table tr {
     border: 1px solid rgb(236, 239, 244, 0.5);
 }
 
-table tr:not(:last-child):hover {
-    background-color: transparent;
-}
-
 table tr:hover {
     background-color: rgb(236, 239, 244, 0.1);
     cursor: pointer;
@@ -486,6 +488,56 @@ td {
     color: rgb(236, 239, 244, 0.5);
 }
 
+.link-underline a {
+    color: rgb(236, 239, 244);
+    padding-bottom: 3px;
+    border-bottom: 3px solid transparent;
+}
+
+.link-underline a:hover {
+    color: rgb(236, 239, 244);
+    -webkit-transition: border-bottom-color .3s;
+    -o-transition: border-bottom-color .3s;
+    border-bottom: 3px solid rgb(136, 192, 208);
+}
+
+.search-panel {
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.search-panel .input-group-text {
+    background-color: transparent;
+    border-color: rgba(236, 239, 244, 0.5);
+}
+
+.tag-pill {
+    background-color: rgb(136, 192, 208);
+    color: rgb(46, 52, 64);
+    cursor: pointer;
+}
+
+.tag-pill a {
+    color: rgb(46, 52, 64);
+}
+
+.status-pill {
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: .2rem;
+    white-space: nowrap;
+    text-align: center;
+    width: 152px;
+    min-width: 152px;
+    max-width: 152px;
+    margin-right: 20px;
+}
+
+.accepted {
+    color: #40af53;
+    border-color: #40af53;
+}
 
 
 

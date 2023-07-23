@@ -2,8 +2,8 @@ from flask import url_for
 from flask_table import Table, Col
 
 
-class ProjectTable(Table):
-    classes = ['table', 'table-hover', 'table-striped', 'table-dark']
+class ProjectsTable(Table):
+    classes = ['table', 'table-dark']
     table_id = 'project_table'
     id = Col('Id', show=False)
     title = Col('Nome', th_html_attrs={'class': 'hide-header-text'})
