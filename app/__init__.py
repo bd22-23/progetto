@@ -13,10 +13,9 @@ login_manager = LoginManager()
 def create_app():
     from app.auth import User
     from app.evaluators import Evaluator
-    from app.researchers import Researcher
+    from app.researchers import Researcher, Author
     from app.admin import Admin
-    from app.projects import Project, ProjectTags, Tags
-    from app.authors import Authors
+    from app.projects import Project, ProjectTag, Tag
 
     app = Flask(__name__)
     app.config.from_object('config.Development')

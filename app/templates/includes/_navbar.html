@@ -5,7 +5,7 @@
             {% if current_user.is_authenticated %}
                 {% set navigation_bar = [
                     ["main.index", "📑 Papers"],
-                    ["projects.project_list", "Progetti"]
+                    ["project.list", "Progetti"]
                 ] -%}
                 {% if current_user.type == 'admin' %}
                     {% set navigation_bar = navigation_bar + [
@@ -15,19 +15,14 @@
                         ]],
                     ] -%}
                 {% endif %}
-                {% set navigation_bar = navigation_bar + [
-                    ["auth.logout", "Logout"],
-                ] -%}
                 {%- if current_user.type == 'researcher' %}
-                    {%- set navigation_bar = navigation_bar + [[url_for("project.project_new"), "project.project_new", "Crea nuovo progetto"]] %}
-                {%- elif current_user.type == 'admin' %}
-                    {%- set navigation_bar = navigation_bar + [[url_for("admin.index"), "admin.index", "Pannello admin"]] %}
+                    {%- set navigation_bar = navigation_bar + [["project.new", "Crea nuovo progetto"]] %}
                 {%- endif %}
-                {%- set navigation_bar = navigation_bar + [[url_for("auth.logout"), "auth.logout", "Logout"]] %}
+                {%- set navigation_bar = navigation_bar + [["auth.logout", "Logout"]] %}
             {% else %}
                 {% set navigation_bar = [
                     ["main.index", "📑 Papers"],
-                    ["projects.project_list", "Progetti"],
+                    ["project.list", "Progetti"],
                     ["auth.login", "Login"],
                     ["auth.register", "Registrazione"],
                 ] -%}

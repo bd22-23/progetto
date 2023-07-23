@@ -27,12 +27,19 @@
             <span class="badge rounded-pill light-blue text-muted">#{{ tag }}</span>
         {% endfor %}
     </p>
-    <h1>{{ project.name }}</h1>
+    <div>
+        <h1>{{ project.title }}</h1>
+        <h6 class="text-secondary">Creato il {{ project.created_at.strftime('%d/%m/%Y') }}</h6>
+    </div>
     <h6>
         {% for author in authors %}
             <a href="{{ url_for('researcher.profile', profile_id=author.id) }}">{{ author.name }} {{ author.surname }}</a>{% if not loop.last %}, {% endif %}
         {% endfor %}
-    </h6><br>
+    </h6>
+    {% if current_user.id == project.owner_id %}
+        <a href="{{ url_for('project.edit', project_id=project.id) }}" class="btn btn-primary">Edit</a>
+    {% endif %}
+    <br>
     <hr class="solid"><br>
     <h3>Abstract</h3><br>
     <p>{{ project.abstract }}</p><br>

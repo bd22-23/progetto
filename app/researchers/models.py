@@ -1,6 +1,8 @@
-from sqlalchemy import Column, String, ForeignKey, UUID
+from sqlalchemy import Column, String, ForeignKey, UUID, Date
+import datetime
 
 from app.auth.models import User
+from app.main import CustomModel
 
 
 class Researcher(User):
@@ -21,11 +23,6 @@ class Researcher(User):
         self.role = role
         self.pronouns = pronouns
 
-    def save(self, db):
-        db.session.add(self)
-        db.session.commit()
-        return self
-
     def update(self, db, name, surname, email, affiliation, role, pronouns):
         self.name = name if name is not None else self.name
         self.surname = surname if surname is not None else self.surname
@@ -35,3 +32,16 @@ class Researcher(User):
         self.pronouns = pronouns if pronouns is not None else self.pronouns
         db.session.commit()
         return self
+
+
+class Author(CustomModel):
+    __tablename__ = 'authors'
+    project = Column(UUID(as_uuid=True), ForeignKey('projects.id'), primary_key=True)
+    researcher = Column(UUID(as_uuid=True), ForeignKey('researchers.id'), primary_key=True)
+
+    def __init__(self, project, researcher):
+        super().__init__()
+        self.project = project
+        self.researcher = researcher
+
+

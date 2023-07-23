@@ -61,7 +61,7 @@ def login():
 def delete_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     user.delete(db)
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('main.index'))
 
 
 @auth.route('/logout')

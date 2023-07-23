@@ -12,7 +12,7 @@ class CustomModel(db.Model):
     id = Column(UUID(as_uuid=True),
                 server_default=func.public.uuid_generate_v4(),
                 nullable=False, primary_key=True)
-    created_at = Column(Date, nullable=False, default=datetime.datetime.now)
+    created_at = Column(Date, server_default=func.now(), nullable=False)
 
     def __init__(self):
         pass

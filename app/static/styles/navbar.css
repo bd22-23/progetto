@@ -33,6 +33,12 @@ body.offcanvas .nav-toggle {
     transform: translateX(270px);
 }
 
+.required .form-label:after {
+    content: "*";
+    color: red;
+    margin-left: 8px;
+}
+
 a {
     -webkit-transition: .3s all ease;
     -o-transition: .3s all ease;
@@ -474,6 +480,10 @@ td {
 .btn-primary:hover {
     background-color: #427380;
     border-color: #427380;
+}
+
+.text-secondary {
+    color: rgb(236, 239, 244, 0.5);
 }
 
 

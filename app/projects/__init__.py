@@ -1,1 +1,1 @@
-from app.projects.models import Project, ProjectTags, Tags
+from app.projects.models import Project, ProjectTag, Tag
