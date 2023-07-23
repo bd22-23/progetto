@@ -4,11 +4,9 @@ from flask_login import current_user, login_required
 from app import db
 from app.auth import User
 from app.authors import Authors
-from app.project_tags import ProjectTags
-from app.projects import Project
+from app.projects import Project, ProjectTags, Tags
 from app.projects.forms import NewProjectForm
 from app.projects.tables import ProjectTable
-from app.tags import Tags
 
 project = Blueprint('project', __name__, url_prefix='/project', template_folder='templates')
 
