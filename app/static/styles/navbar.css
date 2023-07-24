@@ -35,7 +35,7 @@ body.offcanvas .nav-toggle {
 
 .required .form-label:after {
     content: "*";
-    color: red;
+    color: #BF616A;
     margin-left: 8px;
 }
 
@@ -413,6 +413,18 @@ h5,
     margin-bottom: 4px;
 }
 
+.btn-primary {
+    background-color: rgb(120, 183, 201);
+    border-color: rgb(120, 183, 201);
+    color: rgb(59, 66, 82);
+}
+
+.btn-primary:hover {
+    background-color:  rgb(136, 192, 208);
+    border-color: rgb(136, 192, 208);
+    color: rgb(46, 52, 64);
+}
+
 .btn-secondary {
     background-color: rgba(0, 0, 0, 0);
     color: rgb(236, 239, 244);
@@ -473,17 +485,6 @@ td {
     border: 1px solid rgb(236, 239, 244, 0.5);
 }
 
-.btn-primary {
-    color: #2d333b;
-    background-color: rgb(121, 184, 202);
-    border-color: rgb(121, 184, 202);
-}
-
-.btn-primary:hover {
-    background-color: #427380;
-    border-color: #427380;
-}
-
 .text-secondary {
     color: rgb(236, 239, 244, 0.5);
 }
@@ -536,12 +537,12 @@ td {
     border-color: #40af53;
 }
 
-.pending {
+.returned {
     color: #f7b924;
     border-color: #f7b924;
 }
 
-.awaiting {
+.waiting {
     color: rgb(0, 153, 255);
     border-color: rgb(0, 153, 255);
 }
@@ -560,6 +561,17 @@ td {
         filter: hue-rotate(360deg);
     }
 }
+
+.form-text {
+    color: rgb(236, 239, 244, 0.5);
+}
+
+.release-card {
+    background-color: rgb(46, 52, 64);
+    border: 1px solid rgb(236, 239, 244, 0.5);
+    color: rgb(236, 239, 244);
+}
+
 
 
 

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}
+     Nuova Versione
+{% endblock %}
+{% block app_content %}
+    <h1>Nuova Versione</h1>
+    <div>{{ wtf.quick_form(form, enctype='multipart/form-data') }}</div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+{% endblock %}

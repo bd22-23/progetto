@@ -6,19 +6,13 @@ from sqlalchemy.orm import relationship
 from app.main import CustomModel
 
 
-class Status(enum.Enum):
-    ACCEPTED = 'accepted'
-    REJECTED = 'rejected'
-    WAITING = 'waiting'
-    RETURNED = 'returned'
-
-
 class Project(CustomModel):
     __tablename__ = 'projects'
     title = Column(String, nullable=False)
     abstract = Column(String, nullable=False)
     authors = relationship('Researcher', secondary='authors', backref='project_author', lazy=True)
     tags = relationship('Tag', secondary='project_tags', backref='project_tag', lazy=True)
+    releases = relationship('Release', backref='project_release', lazy=True)
 
     def __init__(self, title, abstract):
         super().__init__()

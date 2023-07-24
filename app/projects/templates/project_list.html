@@ -31,7 +31,11 @@
                             {% endfor %}
                         </p>
                         <h4 class="link-underline mb-3">
-                            <i class="bi bi-check-circle accepted"></i>
+                            {% if project.releases %}
+                                <i class="bi bi-{{ project.releases[-1].status.check_icon }}-circle {{ project.releases[-1].status.value }}"></i>
+                            {% else %}
+                                <i class="bi bi-exclamation-circle returned"></i>
+                            {% endif %}
                             <a href="{{ url_for('project.view', project_id=project.id) }}">{{ project.title }}</a>
                         </h4>
                         <h6 class="mb-3">

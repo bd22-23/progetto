@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block app_content %}
+    <a href="{{ url_for('project.view', project_id=project_id) }}" class="btn btn-secondary btn-sm mb-2 round">
+        <i class="fas fa-arrow-left"></i>
+        Indietro
+    </a>
+    <h1>Versione {{ release.version }}</h1>
+{% endblock %}
+```

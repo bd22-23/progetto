@@ -1,5 +1,8 @@
-from flask import Blueprint, render_template, url_for, redirect, request
+import os
+
+from flask import Blueprint, render_template, url_for, redirect, request, current_app
 from flask_login import current_user, login_required
+from sqlalchemy import desc
 
 from app import db
 from app.releases import Release
@@ -17,6 +20,7 @@ def list():
         .join(Author, Author.project == Project.id) \
         .join(ProjectTag, ProjectTag.project == Project.id) \
         .join(Tag, Tag.id == ProjectTag.tag) \
+        .outerjoin(Release, Release.project == Project.id) \
         .filter(ProjectTag.project == Project.id)
     if tag:
         query = query.filter(Tag.value == tag)
@@ -32,6 +36,7 @@ def view(project_id):
         .join(Tag, Tag.id == ProjectTag.tag) \
         .outerjoin(Release, Release.project == Project.id) \
         .filter(Project.id == project_id) \
+        .order_by(desc(Release.version))\
         .first()
     return render_template('project_view.html', project=proj)
 
@@ -47,6 +52,7 @@ def new():
             abstract=form.abstract.data
         ).save(db)
         Author(proj.id, current_user.id).save(db)
+        os.makedirs(os.path.dirname(current_app.config['UPLOAD_FOLDER'] + '/' + str(proj.id) + '/'), exist_ok=True)
         for tag in form.tags.data:
             ProjectTag(proj.id, tag).save(db)
         return redirect(url_for('project.view', project_id=proj.id))

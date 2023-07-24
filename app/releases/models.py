@@ -1,21 +1,50 @@
+import enum
+
 from sqlalchemy import String, Column, JSON, UUID, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 
 from app.main import CustomModel
-from app.projects.models import Status
+
+
+class Status(enum.Enum):
+    ACCEPTED = 'accepted'
+    REJECTED = 'rejected'
+    WAITING = 'waiting'
+    RETURNED = 'returned'
+
+    @property
+    def label(self):
+        if self.value == 'accepted':
+            return 'Accettato'
+        elif self.value == 'rejected':
+            return 'Rifiutato'
+        elif self.value == 'waiting':
+            return 'In Attesa'
+        elif self.value == 'returned':
+            return 'Richieste Modifiche'
+
+    @property
+    def check_icon(self):
+        if self.value == 'accepted':
+            return 'check'
+        elif self.value == 'rejected':
+            return 'dash'
+        elif self.value == 'waiting':
+            return 'clock'
+        elif self.value == 'returned':
+            return 'exclamation'
 
 
 class Document(CustomModel):
     __tablename__ = 'documents'
-    title = Column(String, nullable=False)
     path = Column(String, nullable=False)
     annotations = Column(JSON, nullable=False)
     release = Column(UUID(as_uuid=True), ForeignKey('releases.id'), nullable=False)
 
-    def __init__(self, title, path, annotations=None):
+    def __init__(self, path, release, annotations=None):
         super().__init__()
-        self.name = title
         self.path = path
+        self.release = release
         self.annotations = annotations
 
 
