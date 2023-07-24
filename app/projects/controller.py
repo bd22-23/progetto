@@ -32,7 +32,8 @@ def view(project_id):
         .join(Tag, Tag.id == ProjectTag.tag) \
         .filter(Project.id == project_id) \
         .first()
-    return render_template('project_view.html', project=proj)
+    tags = Tag.query.all()
+    return render_template('project_view.html', project=proj, tags=tags)
 
 
 @login_required
@@ -50,3 +51,9 @@ def new():
             ProjectTag(proj.id, tag).save(db)
         return redirect(url_for('project.view', project_id=proj.id))
     return render_template('project_new.html', form=form)
+
+
+@login_required
+@project.route('/edit/<project_id>', methods=['GET', 'POST'])
+def edit(project_id):
+    pass

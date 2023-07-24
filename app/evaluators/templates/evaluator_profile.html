@@ -25,7 +25,7 @@
                 <span class="mt-3 d-block">{{ user.email }}</span>
                 <span class="mt-3 d-block">{{ user.pronouns }}</span>
                 {% if user.id == current_user.id or current_user.type == "admin" %}
-                    <button class="mt-2 btn btn-sm btn-secondary js-edit-button" js-edit-area-id="edit-researcher-profile">Modifica</button>
+                    <button class="mt-2 btn btn-sm btn-secondary js-edit-button" js-edit-area-id="edit-evaluator-profile">Modifica</button>
                 {% endif %}
             </div>
             <div class="col-9 js-editable-edit-area d-none" id="edit-evaluator-profile">
