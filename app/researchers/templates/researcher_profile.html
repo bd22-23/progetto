@@ -18,7 +18,9 @@
                 </div>
                 <span class="mt-3 d-block">{{ user.email }}</span>
                 <span class="mt-3 d-block">{{ user.pronouns }}</span>
-                <button class="mt-md-2 btn btn-sm btn-secondary js-edit-button mt-1" js-edit-area-id="edit-researcher-profile">Modifica</button>
+                {% if user.id == current_user.id or current_user.type == "admin" %}
+                    <button class="mt-2 btn btn-sm btn-secondary js-edit-button" js-edit-area-id="edit-researcher-profile">Modifica</button>
+                {% endif %}
             </div>
             <div class="col-9 js-editable-edit-area d-none" id="edit-researcher-profile">
                 <form action="{{ url_for('researcher.profile_update', profile_id=user.id) }}" method="POST">
