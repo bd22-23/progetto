@@ -1,7 +1,16 @@
-from sqlalchemy import Column, String, UUID, ForeignKey
+import enum
+
+from sqlalchemy import Column, String, UUID, ForeignKey, Enum, JSON
 from sqlalchemy.orm import relationship
 
 from app.main import CustomModel
+
+
+class Status(enum.Enum):
+    ACCEPTED = 'accepted'
+    REJECTED = 'rejected'
+    WAITING = 'waiting'
+    RETURNED = 'returned'
 
 
 class Project(CustomModel):
@@ -39,11 +48,11 @@ class Tag(CustomModel):
     value = Column(String, nullable=False)
     project = relationship('Project', secondary='project_tags', backref='tag', lazy=True)
 
-    def __init__(self, name):
+    def __init__(self, value):
         super().__init__()
-        self.name = name
+        self.value = value
 
-    def update(self, db, name):
-        self.name = name
+    def update(self, db, value):
+        self.value = value
         db.session.commit()
         return self

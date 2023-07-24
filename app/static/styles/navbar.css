@@ -525,12 +525,9 @@ td {
     display: inline-block;
     border: 1px solid black;
     border-radius: 4px;
-    padding: .2rem;
+    padding: 6px 12px;
     white-space: nowrap;
     text-align: center;
-    width: 152px;
-    min-width: 152px;
-    max-width: 152px;
     margin-right: 20px;
 }
 
@@ -538,6 +535,32 @@ td {
     color: #40af53;
     border-color: #40af53;
 }
+
+.pending {
+    color: #f7b924;
+    border-color: #f7b924;
+}
+
+.awaiting {
+    color: rgb(0, 153, 255);
+    border-color: rgb(0, 153, 255);
+}
+
+.refused {
+    color: #e55353;
+    border-color: #e55353;
+}
+
+.first-version-btn {
+    animation: rainbow 3s infinite linear;
+}
+
+@keyframes rainbow {
+    to {
+        filter: hue-rotate(360deg);
+    }
+}
+
 
 
 

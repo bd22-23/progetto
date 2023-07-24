@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, url_for, redirect, request
 from flask_login import current_user, login_required
 
 from app import db
-from app.auth import User
-from app.researchers import Author, Researcher
+from app.releases import Release
+from app.researchers import Author
 from app.projects import Project, ProjectTag, Tag
 from app.projects.forms import NewProjectForm
 
@@ -30,6 +30,7 @@ def view(project_id):
         .join(Author, Author.project == Project.id) \
         .join(ProjectTag, ProjectTag.project == Project.id) \
         .join(Tag, Tag.id == ProjectTag.tag) \
+        .outerjoin(Release, Release.project == Project.id) \
         .filter(Project.id == project_id) \
         .first()
     return render_template('project_view.html', project=proj)

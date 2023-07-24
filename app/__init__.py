@@ -16,6 +16,7 @@ def create_app():
     from app.researchers import Researcher, Author
     from app.admin import Admin
     from app.projects import Project, ProjectTag, Tag
+    from app.releases import Release, Document
 
     app = Flask(__name__)
     app.config.from_object('config.Development')
@@ -47,6 +48,9 @@ def create_app():
 
     from app.researchers.controller import researcher
     app.register_blueprint(researcher)
+
+    from app.releases.controller import release
+    app.register_blueprint(release)
 
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()
