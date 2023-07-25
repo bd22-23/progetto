@@ -11,18 +11,31 @@
     {% if document.path %}
     <script src="{{ url_for('static', filename='pspdfkit/dist/pspdfkit.js') }}"></script>
         <script>
-        const initialViewState = new PSPDFKit.ViewState({
-            readOnly: true,
-        });
         PSPDFKit.load({
             container: '#pspdfkit',
             document: '{{ document.path }}',
             styleSheets: ['{{ url_for('static', filename='styles/pspdfkit.css') }}'],
             theme: PSPDFKit.Theme.DARK,
-            initialViewState: initialViewState,
-            {% if document.annotations %}
-            instantJSON: {{ document.annotations|tojson }},
+            {% if not editable %}
+            initialViewState: new PSPDFKit.ViewState({
+                readOnly: true,
+            }),
             {% endif %}
+            {% if document.annotations %}
+            instantJSON: JSON.parse('{{ document.annotations|tojson }}'),
+            {% endif %}
+        {% if editable %}
+        }).then(function (instance) {
+            instance.setAnnotationCreatorName('{{ current_user.name }}');
+            instance.addEventListener("annotations.didSave", async () => {
+            const instantJSON = await instance.exportInstantJSON();
+            await fetch('{{ url_for('document.update', document_id=document.id) }}', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(instantJSON)
+            });
+        });
+        {% endif %}
         }).catch(function (error) {
             console.error(error.message);
         });

@@ -48,7 +48,7 @@ def login():
                 case 'admin':
                     return redirect(url_for('main.index', profile_id=user.id))
                 case 'evaluator':
-                    return redirect(url_for('evaluator.index', profile_id=user.id))
+                    return redirect(url_for('evaluator.profile', profile_id=user.id))
                 case 'researcher':
                     return redirect(url_for('researcher.profile', profile_id=user.id))
     else:
