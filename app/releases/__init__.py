@@ -1,1 +1,2 @@
-from app.releases.models import Document, Release
+from app.releases.models import Release, Status
+from app.releases.forms import ReleaseForm

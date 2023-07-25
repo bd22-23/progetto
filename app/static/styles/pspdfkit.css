@@ -1,0 +1,20 @@
+.PSPDFKit-Toolbar {
+    background-color: rgb(59, 66, 82);
+    z-index: 0;
+}
+
+.PSPDFKit-Page-Indicator-Prev,
+.PSPDFKit-Page-Indicator-Next,
+.PSPDFKit-Page-Indicator-Input {
+    background-color: rgb(46, 52, 64);
+}
+
+.PSPDFKit-Viewport,
+.PSPDFKit-Sidebar{
+    background-color: rgb(46, 52, 64);
+    border: 1px solid rgb(59, 66, 82);
+}
+
+.PSPDFKit-Container {
+    color: rgb(236, 239, 244);
+}

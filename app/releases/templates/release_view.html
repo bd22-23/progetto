@@ -4,11 +4,13 @@
         <i class="fas fa-arrow-left"></i>
         Indietro
     </a>
-    <h1>Versione {{ release.version }}</h1>
-    <div class="mb-3 status-pill {{ release.status.value }}">{{ release.status.label }}</div>
+    <div class="mb-4 d-flex align-items-center">
+        <h1 class="">Versione {{ release.version }}</h1>
+        <div class="ms-2 status-pill {{ release.status.value }}">{{ release.status.label }}</div>
+    </div>
         {% for doc in release.documents %}
             <div class="card pdf-card mb-3" style="max-width: 540px;">
-                <a href="#">
+                <a href="{{ url_for('document.view', document_id=doc.id) }}">
                     <div class="row g-0">
                         <div class="col-md-4">
                             <img src="{{ doc.image_data_url }}" class="img-fluid rounded-start" alt="{{ doc.path }}">

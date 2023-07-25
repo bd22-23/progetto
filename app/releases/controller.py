@@ -6,9 +6,10 @@ from sqlalchemy import desc
 from werkzeug.utils import secure_filename
 
 from app import db
-from app.releases import Release, Document
-from app.releases.forms import ReleaseForm
-from app.releases.models import Status
+from app.releases import Release
+from app.releases import ReleaseForm
+from app.releases import Status
+from app.documents import Document
 
 release = Blueprint('release', __name__, url_prefix='/release', template_folder='templates')
 
