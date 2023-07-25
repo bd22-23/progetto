@@ -17,7 +17,7 @@ release = Blueprint('release', __name__, url_prefix='/release', template_folder=
 @release.route('/<project_id>/list', methods=['GET', 'POST'])
 def list(project_id):
     releases = Release.query\
-        .join(Document, Document.release == Release.id)\
+        .join(Document, Document.release_id == Release.id)\
         .filter(Release.project == project_id)\
         .all()
     return render_template('release_list.html', releases=releases)
@@ -34,7 +34,7 @@ def convert_pdf_to_data_url(pdf_path):
 @release.route('/<project_id>/view/<release_id>', methods=['GET', 'POST'])
 def view(project_id, release_id):
     rel = Release.query\
-        .join(Document, Document.release == Release.id)\
+        .join(Document, Document.release_id == Release.id)\
         .filter(Release.project == project_id)\
         .filter(Release.id == release_id)\
         .first()

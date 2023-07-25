@@ -40,7 +40,7 @@ class Release(CustomModel):
     project = Column(UUID(as_uuid=True), ForeignKey('projects.id'), nullable=False)
     version = Column(String, nullable=False)
     status = Column(Enum(Status, values_callable=lambda x: [str(member.value) for member in Status]), nullable=False)
-    documents = relationship('Document', backref='releases', lazy=True)
+    documents = relationship('Document', backref='release', lazy=True)
 
     def __init__(self, project, version, status):
         super().__init__()
