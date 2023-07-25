@@ -2,7 +2,8 @@ import os
 
 from flask import Blueprint, render_template, url_for, redirect, request, current_app
 from flask_login import current_user, login_required
-from sqlalchemy import desc
+from sqlalchemy import desc, func, Integer
+from sqlalchemy.orm import aliased, session
 
 from app import db
 from app.releases import Release
@@ -36,8 +37,11 @@ def view(project_id):
         .join(Tag, Tag.id == ProjectTag.tag) \
         .outerjoin(Release, Release.project == Project.id) \
         .filter(Project.id == project_id) \
-        .order_by(desc(Release.version))\
-        .first()
+        .order_by(
+            desc(Release.created_at),
+            desc(func.cast(func.split_part(Release.version, '.', 1), Integer)),
+            desc(func.cast(func.split_part(Release.version, '.', 2), Integer)),
+        ).first()
     return render_template('project_view.html', project=proj)
 
 

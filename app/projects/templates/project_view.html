@@ -23,12 +23,12 @@
         {% endfor %}
     </p>
     {% if project.releases %}
-    <p class="mb-2">
+    <div class="mb-2">
         Versioni:
-        {% for release in project.releases|reverse %}
-            <a href="{{ url_for('release.view', project_id=project.id, release_id=release.id) }}">{{ release.version }}</a>{% if not loop.last %}, {% endif %}
+        {% for release in project.releases %}
+            <a class="btn btn-secondary btn-sm" href="{{ url_for('release.view', project_id=project.id, release_id=release.id) }}">{{ release.version }}</a>{% if not loop.last %} {% endif %}
         {% endfor %}
-    </p>
+    </div>
     {% endif %}
     {% if not project.releases %}
         <a href="{{ url_for('release.new', project_id=project.id) }}" class="btn btn-secondary w-100 first-version-btn">

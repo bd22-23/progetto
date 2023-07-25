@@ -69,10 +69,6 @@ h5,
     font-weight: 400;
 }
 
-.bg-primary {
-    background: rgb(0, 153, 255); !important;
-}
-
 .ftco-section {
     padding: 7em 0;
 }
@@ -419,7 +415,8 @@ h5,
     color: rgb(59, 66, 82);
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-primary:active {
     background-color:  rgb(136, 192, 208);
     border-color: rgb(136, 192, 208);
     color: rgb(46, 52, 64);
@@ -570,6 +567,46 @@ td {
     background-color: rgb(46, 52, 64);
     border: 1px solid rgb(236, 239, 244, 0.5);
     color: rgb(236, 239, 244);
+}
+
+.pdf-card {
+    border: none;
+    background-color: rgb(59, 66, 82);
+    box-shadow: rgba(15, 17, 21, 0.2) 0 3px 6px 0;
+    border-radius: 0.5em;
+    transition-duration: 100ms, 100ms;
+    transition-timing-function: ease-in-out, ease-in-out;
+    transition-delay: 0s, 0s;
+    transition-property: box-shadow, background-color;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.pdf-card:hover {
+    box-shadow: rgba(15, 17, 21, 0.4) 0 8px 12px 0;
+}
+
+.pdf-card .card-body {
+    color: rgb(236, 239, 244);
+}
+
+.pdf-card a {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.pdf-card a:hover {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.pdf-card img {
+    background-color: white;
+}
+
+.profile-container {
+    border-radius: 0.5em;
+    box-shadow: rgba(15, 17, 21, 0.2) 0 3px 6px 0;
 }
 
 

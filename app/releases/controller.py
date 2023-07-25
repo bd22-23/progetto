@@ -1,4 +1,5 @@
 import os
+import base64
 
 from flask import Blueprint, render_template, request, redirect, url_for, current_app
 from sqlalchemy import desc
@@ -7,6 +8,7 @@ from werkzeug.utils import secure_filename
 from app import db
 from app.releases import Release, Document
 from app.releases.forms import ReleaseForm
+from app.releases.models import Status
 
 release = Blueprint('release', __name__, url_prefix='/release', template_folder='templates')
 
@@ -20,6 +22,14 @@ def list(project_id):
     return render_template('release_list.html', releases=releases)
 
 
+def convert_pdf_to_data_url(pdf_path):
+    with open(pdf_path, "rb") as file:
+        pdf_data = file.read()
+        encoded_pdf = base64.b64encode(pdf_data).decode("utf-8")
+        data_url = f"data:application/pdf;base64,{encoded_pdf}"
+        return data_url
+
+
 @release.route('/<project_id>/view/<release_id>', methods=['GET', 'POST'])
 def view(project_id, release_id):
     rel = Release.query\
@@ -27,6 +37,9 @@ def view(project_id, release_id):
         .filter(Release.project == project_id)\
         .filter(Release.id == release_id)\
         .first()
+    for document in rel.documents:
+        pdf_path = os.path.join(current_app.config['UPLOAD_FOLDER'], str(project_id), document.path)
+        document.image_data_url = convert_pdf_to_data_url(pdf_path)
     return render_template('release_view.html', release=rel, project_id=project_id)
 
 
