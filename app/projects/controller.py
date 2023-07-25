@@ -5,7 +5,7 @@ from app import db
 from app.auth import User
 from app.researchers import Author, Researcher
 from app.projects import Project, ProjectTag, Tag
-from app.projects.forms import NewProjectForm
+from app.projects.forms import NewProjectForm, EditProjectForm
 
 project = Blueprint('project', __name__, url_prefix='/project', template_folder='templates')
 
@@ -33,7 +33,10 @@ def view(project_id):
         .filter(Project.id == project_id) \
         .first()
     tags = Tag.query.all()
-    return render_template('project_view.html', project=proj, tags=tags)
+    form = EditProjectForm(tags, proj)
+    if form.validate_on_submit():
+        print("~~~~~~~~~~~~~~~~~~~~ ENTRATOOOOO -> ", form.title.data, form.abstract.data)
+    return render_template('project_view.html', project=proj, tags=tags, form=form)
 
 
 @login_required
@@ -52,8 +55,10 @@ def new():
         return redirect(url_for('project.view', project_id=proj.id))
     return render_template('project_new.html', form=form)
 
-
 @login_required
-@project.route('/edit/<project_id>', methods=['GET', 'POST'])
-def edit(project_id):
-    pass
+@project.route('/delete/<project_id>', methods=['GET', 'POST'])
+def delete(project_id):
+    proj = Project.query.filter_by(id=project_id).first()
+    proj.delete(db)
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DELETED")
+    return redirect(url_for('project.list'))

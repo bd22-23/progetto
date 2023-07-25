@@ -8,8 +8,8 @@ class Project(CustomModel):
     __tablename__ = 'projects'
     title = Column(String, nullable=False)
     abstract = Column(String, nullable=False)
-    authors = relationship('Researcher', secondary='authors', backref='project_author', lazy=True)
-    tags = relationship('Tag', secondary='project_tags', backref='project_tag', lazy=True)
+    authors = relationship('Researcher', secondary='authors', backref='project_author', lazy=True, passive_deletes=True)
+    tags = relationship('Tag', secondary='project_tags', backref='project_tag', lazy=True, passive_deletes=True)
 
     def __init__(self, title, abstract):
         super().__init__()
@@ -25,8 +25,8 @@ class Project(CustomModel):
 
 class ProjectTag(CustomModel):
     __tablename__ = 'project_tags'
-    project = Column(UUID(as_uuid=True), ForeignKey('projects.id'), primary_key=True)
-    tag = Column(UUID(as_uuid=True), ForeignKey('tags.id'), primary_key=True)
+    project = Column(UUID(as_uuid=True), ForeignKey('projects.id', ondelete='CASCADE'), primary_key=True)
+    tag = Column(UUID(as_uuid=True), ForeignKey('tags.id', ondelete='CASCADE'), primary_key=True)
 
     def __init__(self, project, tag):
         super().__init__()
@@ -37,7 +37,7 @@ class ProjectTag(CustomModel):
 class Tag(CustomModel):
     __tablename__ = 'tags'
     value = Column(String, nullable=False)
-    project = relationship('Project', secondary='project_tags', backref='tag', lazy=True)
+    project = relationship('Project', secondary='project_tags', backref='tag', lazy=True, passive_deletes=True)
 
     def __init__(self, name):
         super().__init__()
