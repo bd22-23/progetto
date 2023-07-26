@@ -55,6 +55,7 @@ def new():
         return redirect(url_for('project.view', project_id=proj.id))
     return render_template('project_new.html', form=form)
 
+
 @login_required
 @project.route('/delete/<project_id>', methods=['GET', 'POST'])
 def delete(project_id):
