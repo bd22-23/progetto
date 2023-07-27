@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
+from app.role_required_decorator import role_required
 
 from app.admin.tables import EvaluatorTable, ResearcherTable
 
@@ -9,6 +10,7 @@ from app.researchers import Researcher
 admin = Blueprint('admin', __name__, url_prefix='/admin', template_folder='templates')
 
 
+@role_required('admin')
 @admin.route('/researchers')
 @login_required
 def researchers():
