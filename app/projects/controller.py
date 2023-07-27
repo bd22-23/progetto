@@ -33,9 +33,19 @@ def view(project_id):
         .filter(Project.id == project_id) \
         .first()
     tags = Tag.query.all()
-    form = EditProjectForm(tags, proj)
+    users = Researcher.query.all()
+    form = EditProjectForm(tags, proj, users)
     if form.validate_on_submit():
-        print("~~~~~~~~~~~~~~~~~~~~ ENTRATOOOOO -> ", form.title.data, form.abstract.data)
+        proj.title = form.title.data
+        proj.abstract = form.abstract.data
+        proj.save(db)
+        ProjectTag.query.filter_by(project=proj.id).delete()
+        for tag in form.tags.data:
+            ProjectTag(proj.id, tag).save(db)
+        Author.query.filter_by(project=proj.id).delete()
+        for author in form.authors.data:
+            Author(proj.id, author).save(db)
+        return redirect(url_for('project.view', project_id=proj.id))
     return render_template('project_view.html', project=proj, tags=tags, form=form)
 
 
