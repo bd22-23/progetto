@@ -26,6 +26,31 @@
                 {{ wtf.quick_form(form) }}
             </div>
         </div>
+        <br><hr class="hr"><br>
+        <div class="row">
+            <h2 class="pb-3">Progetti attivi</h2>
+            <div>
+                {% for project in projects %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-5">
+                                <p class="mb-2">
+                                    {% for tag in project.tags %}
+                                        <span class="badge rounded-pill tag-pill">
+                                            <a href="{{ url_for('project.list', tag=tag.value) }}">{{ tag.value }}</a>
+                                        </span>
+                                    {% endfor %}
+                                </p>
+                                <h4 class="link-underline mb-3">
+                                    <i class="bi bi-check-circle accepted"></i>
+                                    <a href="{{ url_for('project.view', project_id=project.id) }}">{{ project.title }}</a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
         <script>
