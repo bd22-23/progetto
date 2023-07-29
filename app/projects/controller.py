@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, url_for, redirect, request
 from flask_login import current_user, login_required
 
 from app import db
-from app.auth import User
 from app.researchers import Author, Researcher
 from app.projects import Project, ProjectTag, Tag
 from app.projects.forms import NewProjectForm, EditProjectForm

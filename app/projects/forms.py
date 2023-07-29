@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectMultipleField, widgets, Field
+from wtforms import StringField, SubmitField, SelectMultipleField, widgets
 from wtforms.validators import InputRequired
-from wtforms.widgets import TextArea, Input
+from wtforms.widgets import TextArea
 
 
 class MultiCheckboxField(SelectMultipleField):
