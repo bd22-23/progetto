@@ -1,1 +1,1 @@
-from app.researchers.models import Researcher
+from app.researchers.models import Researcher, Author

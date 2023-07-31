@@ -13,8 +13,9 @@ login_manager = LoginManager()
 def create_app():
     from app.auth import User
     from app.evaluators import Evaluator
-    from app.researchers import Researcher
+    from app.researchers import Researcher, Author
     from app.admin import Admin
+    from app.projects import Project, ProjectTag, Tag
 
     app = Flask(__name__)
     app.config.from_object('config.Development')
@@ -35,8 +36,8 @@ def create_app():
     from app.auth.controller import auth
     app.register_blueprint(auth)
 
-    from app.projects.controller import projects
-    app.register_blueprint(projects)
+    from app.projects.controller import project
+    app.register_blueprint(project)
 
     from app.admin.controller import admin
     app.register_blueprint(admin)
@@ -44,7 +45,7 @@ def create_app():
     from app.evaluators.controller import evaluator
     app.register_blueprint(evaluator)
 
-    from app.researchers.controllers import researcher
+    from app.researchers.controller import researcher
     app.register_blueprint(researcher)
 
     def has_no_empty_params(rule):

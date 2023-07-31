@@ -48,7 +48,7 @@ def login():
                 case 'admin':
                     return redirect(url_for('main.index', profile_id=user.id))
                 case 'evaluator':
-                    return redirect(url_for('evaluator.index', profile_id=user.id))
+                    return redirect(url_for('evaluator.profile', profile_id=user.id))
                 case 'researcher':
                     return redirect(url_for('researcher.profile', profile_id=user.id))
     else:
@@ -61,7 +61,8 @@ def login():
 def delete_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     user.delete(db)
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('main.index'))
+
 
 @auth.route('/logout')
 @login_required

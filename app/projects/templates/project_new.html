@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}
+    Nuovo progetto
+{% endblock %}
+{% block app_content %}
+
+    <style>
+        .form-check-list ul {
+            list-style: none;
+        }
+    </style>
+
+    <h1>Crea nuovo progetto</h1><br>
+    <div class="form-check-list">{{ wtf.quick_form(form) }}</div>
+
+{% endblock %}

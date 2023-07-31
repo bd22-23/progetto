@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}
+    {{ project.title }}
+{% endblock %}
+{% block app_content %}
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="my-3 status-pill accepted">Accettato</div>
+        {% if current_user.id in project.authors|map(attribute='id') %}
+            <div>
+                <a href="{{ url_for('project.delete', project_id=project.id) }}" class="btn btn-danger me-3"><i class="bi bi-trash-fill"></i></a>
+                <button class="btn btn-primary js-edit-button" js-edit-area-id="edit-project"><i class="bi bi-pencil-fill"></i></button>
+            </div>
+        {% endif %}
+    </div>
+    <div class="js-editable-info-area">
+        <div>
+            <h1>{{ project.title }}</h1>
+            <p>
+            {% for tag in project.tags %}
+                <span class="badge rounded-pill tag-pill">
+                    <a href="{{ url_for('project.list', tag=tag.value) }}">{{ tag.value }}</a>
+                </span>
+            {% endfor %}
+            </p>
+            <h6 class="text-secondary">Creato il {{ project.created_at.strftime('%d/%m/%Y') }}</h6>
+        </div>
+        <h6>
+            {% for author in project.authors %}
+                <a href="{{ url_for('researcher.profile', profile_id=author.id) }}">{{ author.name }} {{ author.surname }}</a>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </h6><br>
+        <hr class="solid"><br>
+        <h3>Abstract</h3><br>
+        <p>{{ project.abstract }}</p><br>
+    </div>
+    <div class="col-9 js-editable-edit-area d-none" id="edit-project">
+        {{ wtf.quick_form(form) }}
+    </div>
+
+    <script>
+        window.onload = function () {
+            $('.js-edit-button').click(function () {
+                $(this).closest(':has(.js-editable-info-area)').find('.js-editable-info-area').addClass('d-none');
+                $('#' + $(this).attr('js-edit-area-id')).removeClass('d-none');
+            });
+            $('.js-editable-stop-edit-button').on('click', function() {
+                $(this).closest(':has(.js-editable-info-area)').find('.js-editable-info-area').removeClass('d-none');
+                $(this).closest(".js-editable-edit-area").addClass('d-none');
+            });
+            $('.js-editable-authors').select2({
+                theme: "bootstrap-5"
+            });
+        }
+    </script>
+
+{% endblock %}
