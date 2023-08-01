@@ -10,14 +10,15 @@ class ReleaseForm(FlaskForm):
         self.last_version = last_version
         self.version.description = 'Inserisci la versione del rilascio, l\'ultima versione è la ' \
                                    + str(last_version) if last_version else ''
-        # self.version.render_kw = {'placeholder': str(float(last_version) + 0.1) if last_version else '0.1'}
+        self.version.render_kw = {
+            'placeholder': str(float(last_version) + 0.1) if last_version else '0.1'
+        }
 
     version = StringField(
         'Versione',
         validators=[DataRequired()],
     )
     files = MultipleFileField('Carica il/i Documento/i', validators=[
-        FileRequired(),
         FileAllowed('pdf', 'Solo file PDF!'),
-    ])
+    ], render_kw={'required': True})
     submit = SubmitField('Carica')

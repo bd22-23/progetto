@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, render_template, current_app, url_for, request, redirect
+from flask import Blueprint, render_template, url_for, request, redirect
 from flask_login import current_user
 
 from app import db
@@ -16,9 +16,9 @@ def view(document_id):
         .join(Release, Release.id == Document.release_id) \
         .filter(Document.id == document_id) \
         .first()
-    editable = current_user.type == 'evaluator' and doc.release.status == Status.RETURNED
+    editable = current_user.type == 'evaluator' and doc.release.status == Status.WAITING
     doc.path = url_for('static', filename='uploads/' + str(doc.release.project) + '/' + doc.path)
-    return render_template('view.html', document=doc, editable=editable)
+    return render_template('document_view.html', document=doc, editable=editable)
 
 
 @document.route('/<document_id>/edit', methods=['POST'])

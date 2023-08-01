@@ -14,25 +14,25 @@ class Status(enum.Enum):
 
     @property
     def label(self):
-        if self.value == 'accepted':
+        if self == Status.ACCEPTED:
             return 'Accettato'
-        elif self.value == 'rejected':
+        elif self == Status.REJECTED:
             return 'Rifiutato'
-        elif self.value == 'waiting':
+        elif self == Status.WAITING:
             return 'In Attesa'
-        elif self.value == 'returned':
+        elif self == Status.RETURNED:
             return 'Richieste Modifiche'
 
     @property
     def check_icon(self):
-        if self.value == 'accepted':
-            return 'check'
-        elif self.value == 'rejected':
-            return 'dash'
-        elif self.value == 'waiting':
+        if self == Status.ACCEPTED:
+            return 'check-circle'
+        elif self == Status.REJECTED:
+            return 'dash-circle'
+        elif self == Status.WAITING:
             return 'clock'
-        elif self.value == 'returned':
-            return 'exclamation'
+        elif self == Status.RETURNED:
+            return 'exclamation-circle'
 
 
 class Release(CustomModel):

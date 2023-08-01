@@ -4,6 +4,10 @@
     Modifica {{ document.path }}
 {% endblock %}
 {% block app_content %}
+    <a href="{{ url_for('release.view', project_id=document.release.project, release_id=document.release.id) }}" class="btn btn-secondary btn-sm mb-3 round">
+        <i class="fas fa-arrow-left"></i>
+        Indietro
+    </a>
     <div id="pspdfkit" style="width: 100%; height: 90vh;"></div>
 {% endblock %}
 {% block scripts %}
@@ -21,12 +25,12 @@
                 readOnly: true,
             }),
             {% endif %}
-            {% if document.annotations %}
+            {% if document.annotations and current_user.is_authenticated %}
             instantJSON: JSON.parse('{{ document.annotations|tojson }}'),
             {% endif %}
         {% if editable %}
         }).then(function (instance) {
-            instance.setAnnotationCreatorName('{{ current_user.name }}');
+            instance.setAnnotationCreatorName('{{ current_user.name }} {{ current_user.surname }}');
             instance.addEventListener("annotations.didSave", async () => {
             const instantJSON = await instance.exportInstantJSON();
             await fetch('{{ url_for('document.update', document_id=document.id) }}', {

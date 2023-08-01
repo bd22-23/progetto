@@ -534,9 +534,19 @@ td {
     border-color: #40af53;
 }
 
+a.accepted:hover {
+    color: #40af53;
+    border-color: #a0f1a0;
+}
+
 .returned {
     color: #f7b924;
     border-color: #f7b924;
+}
+
+a.returned:hover {
+    color: #f7b924;
+    border-color: #f1d38a;
 }
 
 .waiting {
@@ -544,9 +554,24 @@ td {
     border-color: rgb(0, 153, 255);
 }
 
-.refused {
+a.waiting:hover {
+    color: rgb(0, 153, 255);
+    border-color: rgb(102, 178, 255);
+}
+
+.rejected {
     color: #e55353;
     border-color: #e55353;
+}
+
+a.rejected:hover {
+    color: #e55353;
+    border-color: #f1a0a0;
+}
+
+.awaiting-first-version {
+    color: rgb(119, 119, 122);
+    border-color: rgb(119, 119, 122);
 }
 
 .first-version-btn {

@@ -2,11 +2,11 @@ import os
 
 from flask import Blueprint, render_template, url_for, redirect, request, current_app
 from flask_login import current_user, login_required
-from sqlalchemy import desc, func, Integer
-from sqlalchemy.orm import aliased, session
+from sqlalchemy import desc, func, Integer, and_, or_
 
 from app import db
-from app.releases import Release
+from app.releases import Release, Status
+from app.releases.controller import convert_pdf_to_data_url
 from app.researchers import Author
 from app.projects import Project, ProjectTag, Tag
 from app.projects.forms import NewProjectForm
@@ -16,6 +16,7 @@ project = Blueprint('project', __name__, url_prefix='/project', template_folder=
 
 @project.route('/list', methods=['GET', 'POST'])
 def list():
+
     tag = request.args.get('tag')
     query = Project.query \
         .join(Author, Author.project == Project.id) \
@@ -25,6 +26,15 @@ def list():
         .filter(ProjectTag.project == Project.id)
     if tag:
         query = query.filter(Tag.value == tag)
+    if not current_user.is_authenticated:
+        # If the user is not authenticated, show only the projects which are accepted or rejected
+        # (their latest release is accepted or rejected)
+        latest_release_subquery = db.session.query(Release.project, func.max(Release.created_at).label('latest_date')) \
+            .group_by(Release.project) \
+            .subquery()
+        query = query.join(latest_release_subquery, and_(Release.project == latest_release_subquery.c.project,
+                                                         Release.created_at == latest_release_subquery.c.latest_date)) \
+            .filter(or_(Release.status == Status.ACCEPTED, Release.status == Status.REJECTED))
     projects = query.all()
     return render_template('project_list.html', projects=projects, tag=tag)
 
@@ -42,6 +52,10 @@ def view(project_id):
             desc(func.cast(func.split_part(Release.version, '.', 1), Integer)),
             desc(func.cast(func.split_part(Release.version, '.', 2), Integer)),
         ).first()
+    if proj.releases:
+        for document in proj.releases[-1].documents:
+            pdf_path = os.path.join(current_app.config['UPLOAD_FOLDER'], str(project_id), document.path)
+            document.image_data_url = convert_pdf_to_data_url(pdf_path)
     return render_template('project_view.html', project=proj)
 
 
