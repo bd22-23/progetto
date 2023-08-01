@@ -7,6 +7,7 @@ from flask_login import LoginManager
 from sqlalchemy import text
 
 from app.roles import create_roles
+from app.triggers import create_triggers
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -71,6 +72,8 @@ def create_app():
 
     app.jinja_env.globals['bootstrap_is_hidden_field'] = is_hidden_field_filter
 
-    create_roles(app, db)
+    # create_roles(app, db)
+
+    create_triggers(app, db)
 
     return app
