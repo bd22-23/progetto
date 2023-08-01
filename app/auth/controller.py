@@ -1,9 +1,8 @@
 from flask import Blueprint, redirect, url_for, render_template, request, flash
 from flask_login import login_required, current_user, login_user, logout_user
-
 from werkzeug.security import generate_password_hash
-
 from app import db
+from app.admin import admin_only
 from app.auth import User
 from app.auth.forms import LoginForm, RegisterForm
 from app.researchers import Researcher
@@ -58,6 +57,8 @@ def login():
 
 
 @auth.route('/delete/<user_id>')
+@login_required
+@admin_only
 def delete_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     user.delete(db)

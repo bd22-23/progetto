@@ -8,9 +8,9 @@ from app import db
 from app.evaluators import Evaluator
 from app.releases import Release, Status
 from app.releases.controller import convert_pdf_to_data_url
-from app.researchers import Author
+from app.researchers import Author, Researcher, researcher_only
 from app.projects import Project, ProjectTag, Tag
-from app.projects.forms import NewProjectForm
+from app.projects.forms import NewProjectForm, EditProjectForm
 
 project = Blueprint('project', __name__, url_prefix='/project', template_folder='templates')
 
@@ -57,11 +57,26 @@ def view(project_id):
         for document in proj.releases[-1].documents:
             pdf_path = os.path.join(current_app.config['UPLOAD_FOLDER'], str(project_id), document.path)
             document.image_data_url = convert_pdf_to_data_url(pdf_path)
-    return render_template('project_view.html', project=proj)
+    tags = Tag.query.all()
+    users = Researcher.query.all()
+    form = EditProjectForm(tags, proj, users)
+    if form.validate_on_submit():
+        proj.title = form.title.data
+        proj.abstract = form.abstract.data
+        proj.save(db)
+        ProjectTag.query.filter_by(project=proj.id).delete()
+        for tag in form.tags.data:
+            ProjectTag(proj.id, tag).save(db)
+        Author.query.filter_by(project=proj.id).delete()
+        for author in form.authors.data:
+            Author(proj.id, author).save(db)
+        return redirect(url_for('project.view', project_id=proj.id))
+    return render_template('project_view.html', project=proj, tags=tags, form=form)
 
 
-@login_required
 @project.route('/new', methods=['GET', 'POST'])
+@login_required
+@researcher_only
 def new():
     tags = Tag.query.all()
     form = NewProjectForm(tags)
@@ -84,3 +99,13 @@ def assign_evaluator(project_id, evaluator_id):
     proj.evaluator_id = evaluator_id
     proj.save(db)
     return redirect(url_for('project.view', project_id=proj.id))
+
+  
+  
+@project.route('/delete/<project_id>', methods=['GET', 'POST'])
+@login_required
+@researcher_only
+def delete(project_id):
+    proj = Project.query.filter_by(id=project_id).first()
+    proj.delete(db)
+    return redirect(url_for('project.list'))

@@ -1,9 +1,7 @@
 import wtforms
-
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-
 from sqlalchemy import text
 
 db = SQLAlchemy()
@@ -77,5 +75,10 @@ def create_app():
         return isinstance(field, wtforms.HiddenField)
 
     app.jinja_env.globals['bootstrap_is_hidden_field'] = is_hidden_field_filter
+
+    @app.errorhandler(403)
+    def handle_unauthorized(e):
+        with app.app_context():
+            return render_template('403.html'), 403
 
     return app
