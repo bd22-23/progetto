@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block app_content %}
+    <a href="{{ url_for('project.view', project_id=project_id) }}" class="btn btn-secondary btn-sm mb-2 round">
+        <i class="fas fa-arrow-left"></i>
+        Indietro
+    </a>
+    <div class="mb-2 d-flex align-items-center">
+        <h1 class="">Versione {{ release.version }}</h1>
+    </div>
+    <div class="mb-4 status-pill {{ release.status.value }}">{{ release.status.label }}</div>
+    <div class="mb-4">
+        {% for doc in release.documents %}
+            <div class="card pdf-card mb-3" style="max-width: 540px;">
+                <a href="{{ url_for('document.view', document_id=doc.id) }}">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ doc.image_data_url }}" class="img-fluid rounded-start" alt="{{ doc.path }}">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ doc.path }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    {% if current_user.type == 'evaluator' and release.status.value == 'waiting' %}
+        <div class="d-flex">
+            <form method="post" action="{{ url_for('release.update', project_id=project_id, release_id=release.id) }}">
+                <input type="hidden" name="status" value="accepted">
+                <button type="submit" class="btn btn-outline-success mb-2 round">
+                    <i class="fas fa-check"></i>
+                    Accetta
+                </button>
+            </form>
+
+            <form class="ms-2" method="post" action="{{ url_for('release.update', project_id=project_id, release_id=release.id) }}">
+                <input type="hidden" name="status" value="rejected">
+                <button type="submit" class="btn btn-outline-danger mb-2 round">
+                    <i class="fas fa-times"></i>
+                    Rifiuta
+                </button>
+            </form>
+
+            <form class="ms-2" method="post" action="{{ url_for('release.update', project_id=project_id, release_id=release.id) }}">
+                <input type="hidden" name="status" value="returned">
+                <button type="submit" class="btn btn-outline-warning btn-border mb-2 round">
+                    <i class="fas fa-exclamation"></i>
+                    Richiedi Modifiche
+                </button>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}
+    Modifica {{ document.path }}
+{% endblock %}
+{% block app_content %}
+    <a href="{{ url_for('release.view', project_id=document.release.project, release_id=document.release.id) }}" class="btn btn-secondary btn-sm mb-3 round">
+        <i class="fas fa-arrow-left"></i>
+        Indietro
+    </a>
+    <div id="pspdfkit" style="width: 100%; height: 90vh;"></div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    {% if document.path %}
+    <script src="{{ url_for('static', filename='pspdfkit/dist/pspdfkit.js') }}"></script>
+        <script>
+        PSPDFKit.load({
+            container: '#pspdfkit',
+            document: '{{ document.path }}',
+            styleSheets: ['{{ url_for('static', filename='styles/pspdfkit.css') }}'],
+            theme: PSPDFKit.Theme.DARK,
+            {% if not editable %}
+            initialViewState: new PSPDFKit.ViewState({
+                readOnly: true,
+            }),
+            {% endif %}
+            {% if document.annotations and current_user.is_authenticated %}
+            instantJSON: JSON.parse('{{ document.annotations|tojson }}'),
+            {% endif %}
+        {% if editable %}
+        }).then(function (instance) {
+            instance.setAnnotationCreatorName('{{ current_user.name }} {{ current_user.surname }}');
+            instance.addEventListener("annotations.didSave", async () => {
+            const instantJSON = await instance.exportInstantJSON();
+            await fetch('{{ url_for('document.update', document_id=document.id) }}', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(instantJSON)
+            });
+        });
+        {% endif %}
+        }).catch(function (error) {
+            console.error(error.message);
+        });
+    </script>
+    {% endif %}
+{% endblock %}

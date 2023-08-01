@@ -1,5 +1,6 @@
 import enum
 from sqlalchemy import Column, String, Enum, ForeignKey, UUID
+from sqlalchemy.orm import relationship
 from app.auth.models import User
 
 
@@ -15,6 +16,7 @@ class Evaluator(User):
     bio = Column(String)
     pronouns = Column(String)
     grade = Column(Enum(Grade, values_callable=lambda x: [str(member.value) for member in Grade]), nullable=False)
+    projects = relationship('Project', backref='evaluator', lazy=True)
 
     __mapper_args__ = {
         'polymorphic_identity': 'evaluator',

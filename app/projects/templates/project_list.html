@@ -31,12 +31,21 @@
                             {% endfor %}
                         </p>
                         <h4 class="link-underline mb-3">
-                            <i class="bi bi-check-circle accepted"></i>
-                            <a href="{{ url_for('project.view', project_id=project.id) }}">{{ project.title }}</a>
+                            {% if project.releases %}
+                                <i class="bi bi-{{ project.releases[-1].status.check_icon }} {{ project.releases[-1].status.value }}"></i>
+                            {% else %}
+                                <i class="bi bi-exclamation-circle awaiting-first-version"></i>
+                            {% endif %}
+                            <a class="project-title" href="{{ url_for('project.view', project_id=project.id) }}">{{ project.title }}</a>
                         </h4>
                         <h6 class="mb-3">
                         {% for author in project.authors %}
-                            <a href="{{ url_for('researcher.profile', profile_id=author.id) }}">{{ author.name }} {{ author.surname }}</a>{% if not loop.last %}, {% endif %}
+                            <a class="author-list d-flex" href="{{ url_for('researcher.profile', profile_id=author.id) }}">
+                                {{ author.name }} {{ author.surname }}
+                            {% if author.id == current_user.id %}
+                                <span class="ms-2 badge rounded-pill orange-tag-pill">Tu</span>
+                            {% endif %}
+                            </a>{% if not loop.last %}, {% endif %}
                         {% endfor %}
                         </h6>
                     </div>
@@ -46,22 +55,26 @@
         </ul>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            $('#searchInput').on('input', function () {
-                const searchText = $(this).val().toLowerCase().trim();
-                $('.projects-list .mb-5').each(function () {
-                    const title = $(this).find('h4 a').text().toLowerCase();
-                    const authors = $(this).find('h6 a').text().toLowerCase();
 
-                    if (title.indexOf(searchText) !== -1 || authors.indexOf(searchText) !== -1) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
-                    }
+    {% block scripts %}
+        {{ super() }}
+        <script>
+            $(document).ready(function () {
+                $('#searchInput').on('input', function () {
+                    const searchText = $(this).val().toLowerCase().trim();
+                    $('.projects-list .row').each(function () {
+                        const title = $(this).find('.project-title').text().toLowerCase();
+                        const authors = $(this).find('.author-list').text().toLowerCase();
+
+                        if (title.includes(searchText) || authors.includes(searchText)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
                 });
             });
-        });
-    </script>
+        </script>
+    {% endblock %}
 
 {% endblock %}

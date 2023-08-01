@@ -35,7 +35,7 @@ body.offcanvas .nav-toggle {
 
 .required .form-label:after {
     content: "*";
-    color: red;
+    color: #BF616A;
     margin-left: 8px;
 }
 
@@ -67,10 +67,6 @@ h5,
 .h5 {
     line-height: 1.5;
     font-weight: 400;
-}
-
-.bg-primary {
-    background: rgb(0, 153, 255); !important;
 }
 
 .ftco-section {
@@ -413,6 +409,19 @@ h5,
     margin-bottom: 4px;
 }
 
+.btn-primary {
+    background-color: rgb(120, 183, 201);
+    border-color: rgb(120, 183, 201);
+    color: rgb(59, 66, 82);
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+    background-color:  rgb(136, 192, 208);
+    border-color: rgb(136, 192, 208);
+    color: rgb(46, 52, 64);
+}
+
 .btn-secondary {
     background-color: rgba(0, 0, 0, 0);
     color: rgb(236, 239, 244);
@@ -473,17 +482,6 @@ td {
     border: 1px solid rgb(236, 239, 244, 0.5);
 }
 
-.btn-primary {
-    color: #2d333b;
-    background-color: rgb(121, 184, 202);
-    border-color: rgb(121, 184, 202);
-}
-
-.btn-primary:hover {
-    background-color: #427380;
-    border-color: #427380;
-}
-
 .text-secondary {
     color: rgb(236, 239, 244, 0.5);
 }
@@ -525,19 +523,125 @@ td {
     display: inline-block;
     border: 1px solid black;
     border-radius: 4px;
-    padding: .2rem;
+    padding: 6px 12px;
     white-space: nowrap;
     text-align: center;
-    width: 152px;
-    min-width: 152px;
-    max-width: 152px;
     margin-right: 20px;
+}
+
+.orange-tag-pill {
+    background-color: #D08770;
+    color: rgb(46, 52, 64);
 }
 
 .accepted {
     color: #40af53;
     border-color: #40af53;
 }
+
+a.accepted:hover {
+    color: #40af53;
+    border-color: #a0f1a0;
+}
+
+.returned {
+    color: #f7b924;
+    border-color: #f7b924;
+}
+
+a.returned:hover {
+    color: #f7b924;
+    border-color: #f1d38a;
+}
+
+.waiting {
+    color: rgb(0, 153, 255);
+    border-color: rgb(0, 153, 255);
+}
+
+a.waiting:hover {
+    color: rgb(0, 153, 255);
+    border-color: rgb(102, 178, 255);
+}
+
+.rejected {
+    color: #e55353;
+    border-color: #e55353;
+}
+
+a.rejected:hover {
+    color: #e55353;
+    border-color: #f1a0a0;
+}
+
+.awaiting-first-version {
+    color: rgb(119, 119, 122);
+    border-color: rgb(119, 119, 122);
+}
+
+.first-version-btn {
+    color: rgb(119, 119, 122);
+    border-color: rgb(119, 119, 122);
+    animation: rainbow 3s infinite linear;
+}
+
+@keyframes rainbow {
+    to {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.form-text {
+    color: rgb(236, 239, 244, 0.5);
+}
+
+.release-card {
+    background-color: rgb(46, 52, 64);
+    border: 1px solid rgb(236, 239, 244, 0.5);
+    color: rgb(236, 239, 244);
+}
+
+.pdf-card {
+    border: none;
+    background-color: rgb(59, 66, 82);
+    box-shadow: rgba(15, 17, 21, 0.2) 0 3px 6px 0;
+    border-radius: 0.5em;
+    transition-duration: 100ms, 100ms;
+    transition-timing-function: ease-in-out, ease-in-out;
+    transition-delay: 0s, 0s;
+    transition-property: box-shadow, background-color;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.pdf-card:hover {
+    box-shadow: rgba(15, 17, 21, 0.4) 0 8px 12px 0;
+}
+
+.pdf-card .card-body {
+    color: rgb(236, 239, 244);
+}
+
+.pdf-card a {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.pdf-card a:hover {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.pdf-card img {
+    background-color: white;
+}
+
+.profile-container {
+    border-radius: 0.5em;
+    box-shadow: rgba(15, 17, 21, 0.2) 0 3px 6px 0;
+}
+
+
 
 
 
