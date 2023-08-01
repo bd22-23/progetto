@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block app_content %}
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">403</h1>
+            <p class="col-md-8 fs-4">Purtroppo non sei autorizzato a vedere questa pagina!</p>
+            <a href={{ url_for('main.index') }} class="btn btn-secondary btn-lg">Torna alla Home</a>
+        </div>
+    </div>
+{% endblock %}

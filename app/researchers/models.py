@@ -1,7 +1,5 @@
 from sqlalchemy import Column, String, ForeignKey, UUID
-
 from sqlalchemy.orm import relationship
-
 from app.auth.models import User
 from app.main import CustomModel
 

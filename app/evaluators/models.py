@@ -1,7 +1,5 @@
 import enum
-
 from sqlalchemy import Column, String, Enum, ForeignKey, UUID
-
 from app.auth.models import User
 
 

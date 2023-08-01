@@ -1,9 +1,7 @@
-from flask import Blueprint, render_template, request, redirect
-
+from flask import Blueprint, render_template, redirect
 from app.auth import User
 from app.projects import Project, ProjectTag, Tag
 from app.researchers import Researcher, Author
-
 from app import db
 from app.researchers.forms import EditResearcherForm
 
