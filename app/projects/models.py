@@ -1,6 +1,5 @@
 from sqlalchemy import Column, String, UUID, ForeignKey
 from sqlalchemy.orm import relationship
-
 from app.main import CustomModel
 
 

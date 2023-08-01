@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, url_for, redirect, request
 from flask_login import current_user, login_required
-
 from app import db
-from app.researchers import Author, Researcher
+from app.researchers import Author, Researcher, researcher_only
 from app.projects import Project, ProjectTag, Tag
 from app.projects.forms import NewProjectForm, EditProjectForm
 
@@ -48,8 +47,9 @@ def view(project_id):
     return render_template('project_view.html', project=proj, tags=tags, form=form)
 
 
-@login_required
 @project.route('/new', methods=['GET', 'POST'])
+@login_required
+@researcher_only
 def new():
     tags = Tag.query.all()
     form = NewProjectForm(tags)
@@ -65,10 +65,10 @@ def new():
     return render_template('project_new.html', form=form)
 
 
-@login_required
 @project.route('/delete/<project_id>', methods=['GET', 'POST'])
+@login_required
+@researcher_only
 def delete(project_id):
     proj = Project.query.filter_by(id=project_id).first()
     proj.delete(db)
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DELETED")
     return redirect(url_for('project.list'))
