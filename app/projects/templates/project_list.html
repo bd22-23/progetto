@@ -40,7 +40,12 @@
                         </h4>
                         <h6 class="mb-3">
                         {% for author in project.authors %}
-                            <a class="author-list" href="{{ url_for('researcher.profile', profile_id=author.id) }}">{{ author.name }} {{ author.surname }}</a>{% if not loop.last %}, {% endif %}
+                            <a class="author-list d-flex" href="{{ url_for('researcher.profile', profile_id=author.id) }}">
+                                {{ author.name }} {{ author.surname }}
+                            {% if author.id == current_user.id %}
+                                <span class="ms-2 badge rounded-pill orange-tag-pill">Tu</span>
+                            {% endif %}
+                            </a>{% if not loop.last %}, {% endif %}
                         {% endfor %}
                         </h6>
                     </div>

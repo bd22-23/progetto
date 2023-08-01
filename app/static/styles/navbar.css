@@ -529,6 +529,11 @@ td {
     margin-right: 20px;
 }
 
+.orange-tag-pill {
+    background-color: #D08770;
+    color: rgb(46, 52, 64);
+}
+
 .accepted {
     color: #40af53;
     border-color: #40af53;
@@ -575,6 +580,8 @@ a.rejected:hover {
 }
 
 .first-version-btn {
+    color: rgb(119, 119, 122);
+    border-color: rgb(119, 119, 122);
     animation: rainbow 3s infinite linear;
 }
 

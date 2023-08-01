@@ -13,6 +13,7 @@ class Project(CustomModel):
     authors = relationship('Researcher', secondary='authors', backref='project_author', lazy=True)
     tags = relationship('Tag', secondary='project_tags', backref='project_tag', lazy=True)
     releases = relationship('Release', backref='project_release', lazy=True)
+    evaluator_id = Column(UUID(as_uuid=True), ForeignKey('evaluators.id'), nullable=True)
 
     def __init__(self, title, abstract):
         super().__init__()

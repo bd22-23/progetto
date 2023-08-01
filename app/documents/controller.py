@@ -16,7 +16,9 @@ def view(document_id):
         .join(Release, Release.id == Document.release_id) \
         .filter(Document.id == document_id) \
         .first()
-    editable = current_user.type == 'evaluator' and doc.release.status == Status.WAITING
+    editable = current_user.type == 'evaluator' \
+               and doc.release.status == Status.WAITING \
+               and doc.release.evaluator_id == current_user.id
     doc.path = url_for('static', filename='uploads/' + str(doc.release.project) + '/' + doc.path)
     return render_template('document_view.html', document=doc, editable=editable)
 
@@ -24,7 +26,7 @@ def view(document_id):
 @document.route('/<document_id>/edit', methods=['POST'])
 def update(document_id):
     data = json.loads(request.data)
-    Document.query.filter(Document.id == document_id)\
+    Document.query.filter(Document.id == document_id) \
         .update({'annotations': data})
     db.session.commit()
     return redirect(url_for('document.view', document_id=document_id))

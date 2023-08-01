@@ -14,15 +14,6 @@ from app.documents import Document
 release = Blueprint('release', __name__, url_prefix='/release', template_folder='templates')
 
 
-@release.route('/<project_id>/list', methods=['GET', 'POST'])
-def list(project_id):
-    releases = Release.query\
-        .join(Document, Document.release_id == Release.id)\
-        .filter(Release.project == project_id)\
-        .all()
-    return render_template('release_list.html', releases=releases)
-
-
 def convert_pdf_to_data_url(pdf_path):
     with open(pdf_path, "rb") as file:
         pdf_data = file.read()
@@ -44,6 +35,15 @@ def view(project_id, release_id):
     return render_template('release_view.html', release=rel, project_id=project_id)
 
 
+@release.route('/<project_id>/update/<release_id>', methods=['POST'])
+def update(project_id, release_id):
+    stat = Status(request.form['status'])
+    Release.query.filter(Release.id == release_id)\
+        .update({'status': stat})
+    db.session.commit()
+    return redirect(url_for('release.view', project_id=project_id, release_id=release_id))
+
+
 @release.route('/<project_id>/new', methods=['GET', 'POST'])
 def new(project_id):
     last_release = Release.query\
@@ -57,15 +57,19 @@ def new(project_id):
             version=form.version.data,
             status=Status.WAITING
         ).save(db)
+        # Create folder for project if it doesn't exist
+        from pathlib import Path
+        Path(current_app.config['UPLOAD_FOLDER'] + '/' + str(project_id))\
+            .mkdir(parents=True, exist_ok=True)
         for file in form.files.data:
-            Document(
-                path=file.filename,
-                release=rel.id,
-            ).save(db)
             file_filename = secure_filename(file.filename)
+            Document(
+                path=secure_filename(file.filename),
+                release_id=rel.id,
+            ).save(db)
             file.save(os.path.join(
                 current_app.config['UPLOAD_FOLDER'] + '/' + str(project_id),
                 file_filename
             ))
-        return redirect(url_for('release.list', project_id=project_id))
+        return redirect(url_for('project.view', project_id=project_id))
     return render_template('release_new.html', form=form)

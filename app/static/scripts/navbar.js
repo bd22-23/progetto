@@ -1,4 +1,3 @@
-// write a function that makes a submenu appear when you hover over a menu item with a cool animation with jquery
 $(document).ready(function() {
     $('.sub-nav-activator').hover(function() {
         $(this).find('.sub-nav').first().slideDown("easeOutBounce");

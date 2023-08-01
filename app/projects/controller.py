@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 from sqlalchemy import desc, func, Integer, and_, or_
 
 from app import db
+from app.evaluators import Evaluator
 from app.releases import Release, Status
 from app.releases.controller import convert_pdf_to_data_url
 from app.researchers import Author
@@ -16,7 +17,6 @@ project = Blueprint('project', __name__, url_prefix='/project', template_folder=
 
 @project.route('/list', methods=['GET', 'POST'])
 def list():
-
     tag = request.args.get('tag')
     query = Project.query \
         .join(Author, Author.project == Project.id) \
@@ -45,6 +45,7 @@ def view(project_id):
         .join(Author, Author.project == Project.id) \
         .join(ProjectTag, ProjectTag.project == Project.id) \
         .join(Tag, Tag.id == ProjectTag.tag) \
+        .outerjoin(Evaluator, Evaluator.id == Project.evaluator_id) \
         .outerjoin(Release, Release.project == Project.id) \
         .filter(Project.id == project_id) \
         .order_by(
@@ -75,3 +76,11 @@ def new():
             ProjectTag(proj.id, tag).save(db)
         return redirect(url_for('project.view', project_id=proj.id))
     return render_template('project_new.html', form=form)
+
+
+@project.route('<project_id>/assign_evaluator/<evaluator_id>', methods=['GET'])
+def assign_evaluator(project_id, evaluator_id):
+    proj = Project.query.get(project_id)
+    proj.evaluator_id = evaluator_id
+    proj.save(db)
+    return redirect(url_for('project.view', project_id=proj.id))
