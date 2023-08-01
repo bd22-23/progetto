@@ -6,6 +6,8 @@ from flask_login import LoginManager
 
 from sqlalchemy import text
 
+from app.roles import create_roles
+
 db = SQLAlchemy()
 login_manager = LoginManager()
 
@@ -68,5 +70,7 @@ def create_app():
         return isinstance(field, wtforms.HiddenField)
 
     app.jinja_env.globals['bootstrap_is_hidden_field'] = is_hidden_field_filter
+
+    create_roles(app, db)
 
     return app
