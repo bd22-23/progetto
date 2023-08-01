@@ -1,22 +1,30 @@
 DROP USER IF EXISTS Admin;
 DROP USER IF EXISTS Researcher;
 DROP USER IF EXISTS Evaluator;
+DROP USER IF EXISTS AppUser;
 
-CREATE USER Admin_ WITH PASSWORD 'password1';
+-- Utente senza account, può registrarsi e vedere i progetti pubblici
+CREATE USER AppUser WITH PASSWORD 'password';
+GRANT USAGE ON SCHEMA public TO AppUser;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO AppUser;
+GRANT INSERT ON public.users, public.researchers TO AppUser;
+
+CREATE USER Admin WITH PASSWORD 'password1';
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO Admin;
+
 CREATE USER Researcher WITH PASSWORD 'password2';
+GRANT AppUser TO Researcher;
+GRANT INSERT ON TABLE public.projects, public.releases, public.documents, public.authors, public.project_tags TO Researcher;
+GRANT DELETE ON TABLE public.researchers, public.projects TO Researcher;
+GRANT UPDATE(title, abstract) ON TABLE public.projects TO Researcher;
+GRANT UPDATE(name, surname, password, email) ON TABLE public.users TO Researcher;
+GRANT UPDATE(pronouns, affiliation) ON TABLE public.researchers TO Researcher;
+-- Update dei tag dei progetti? Per ora non si può fare
+
 CREATE USER Evaluator WITH PASSWORD 'password3';
-
-GRANT USAGE ON SCHEMA TO Admin;
-GRANT USAGE ON SCHEMA TO Researcher;
-GRANT USAGE ON SCHEMA TO Evaluator;
-
-GRANT USAGE, ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO Admin;
-
-GRANT USAGE, SELECT ON Researchers, Projects, Releases, Documents, Tag IN SCHEMA public TO Researcher;
-GRANT USAGE, INSERT ON Researchers, Projects, Releases(number), Documents(path) IN SCHEMA public TO Researcher;
-GRANT USAGE, UPDATE ON Researchers(name,surname,password,profile_picture,bio,pronouns,affiliation), Projects IN SCHEMA public TO Researcher;
-GRANT USAGE, DELETE ON Researchers, Projects IN SCHEMA public TO Researcher;
-
-GRANT USAGE, SELECT ON Evaluators, Projects, Releases, Documents, Tag IN SCHEMA public TO Evaluator;
-GRANT USAGE, INSERT ON Releases(state), Documents IN SCHEMA public TO Evaluator;
-GRANT USAGE, SELECT ON UPDATE ON Evaluators(name,surname,password,profile_picture,bio,pronouns), Releases(state) IN SCHEMA public TO Evaluator;
+GRANT AppUser TO Evaluator;
+GRANT UPDATE(status) ON TABLE public.releases TO Evaluator;
+GRANT UPDATE(evaluator_id) ON TABLE public.projects TO Evaluator;
+GRANT UPDATE(annotations) ON TABLE public.documents TO Evaluator;
+GRANT UPDATE(name, surname, password, email) ON TABLE public.users TO Evaluator;
+GRANT UPDATE(bio, pronouns) ON TABLE public.evaluators TO Evaluator;

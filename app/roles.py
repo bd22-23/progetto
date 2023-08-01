@@ -8,25 +8,33 @@ def create_roles(app, db):
                 DROP USER IF EXISTS Admin;
                 DROP USER IF EXISTS Researcher;
                 DROP USER IF EXISTS Evaluator;
+                DROP USER IF EXISTS AppUser;
+                
+                -- Utente senza account, può registrarsi e vedere i progetti pubblici
+                CREATE USER AppUser WITH PASSWORD 'password';
+                GRANT USAGE ON SCHEMA public TO AppUser;
+                GRANT SELECT ON ALL TABLES IN SCHEMA public TO AppUser;
+                GRANT INSERT ON public.users, public.researchers TO AppUser;
                 
                 CREATE USER Admin WITH PASSWORD 'password1';
-                CREATE USER Researcher WITH PASSWORD 'password2';
-                CREATE USER Evaluator WITH PASSWORD 'password3';
-                
-                GRANT USAGE ON SCHEMA public TO Admin;
-                GRANT USAGE ON SCHEMA public TO Researcher;
-                GRANT USAGE ON SCHEMA public TO Evaluator;
-                
                 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO Admin;
                 
-                GRANT SELECT ON TABLE Researchers, Projects, Releases, Documents, Tag TO Researcher;
-                GRANT INSERT ON TABLE Researchers, Projects, Releases(number), Documents(path) TO Researcher;
-                GRANT UPDATE ON TABLE Researchers, Projects TO Researcher;
-                GRANT DELETE ON TABLE Researchers, Projects TO Researcher;
+                CREATE USER Researcher WITH PASSWORD 'password2';
+                GRANT AppUser TO Researcher;
+                GRANT INSERT ON TABLE public.projects, public.releases, public.documents, public.authors, public.project_tags TO Researcher;
+                GRANT DELETE ON TABLE public.researchers, public.projects TO Researcher;
+                GRANT UPDATE(title, abstract) ON TABLE public.projects TO Researcher;
+                GRANT UPDATE(name, surname, password, email) ON TABLE public.users TO Researcher;
+                GRANT UPDATE(pronouns, affiliation) ON TABLE public.researchers TO Researcher;
+                -- Update dei tag dei progetti? Per ora non si può fare
                 
-                GRANT SELECT ON TABLE Evaluators, Projects, Releases, Documents, Tag TO Evaluator;
-                GRANT INSERT ON TABLE Releases(state), Documents TO Evaluator;
-                GRANT SELECT, UPDATE ON TABLE Evaluators, Releases TO Evaluator;
+                CREATE USER Evaluator WITH PASSWORD 'password3';
+                GRANT AppUser TO Evaluator;
+                GRANT UPDATE(status) ON TABLE public.releases TO Evaluator;
+                GRANT UPDATE(evaluator_id) ON TABLE public.projects TO Evaluator;
+                GRANT UPDATE(annotations) ON TABLE public.documents TO Evaluator;
+                GRANT UPDATE(name, surname, password, email) ON TABLE public.users TO Evaluator;
+                GRANT UPDATE(bio, pronouns) ON TABLE public.evaluators TO Evaluator;
             """)
 
             connection.execute(query)
