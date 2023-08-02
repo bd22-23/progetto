@@ -2,7 +2,7 @@ DROP USER IF EXISTS Admin;
 DROP USER IF EXISTS Researcher;
 DROP USER IF EXISTS Evaluator;
 
-CREATE USER Admin_ WITH PASSWORD 'password1';
+CREATE USER Admin WITH PASSWORD 'password1';
 CREATE USER Researcher WITH PASSWORD 'password2';
 CREATE USER Evaluator WITH PASSWORD 'password3';
 
@@ -19,4 +19,4 @@ GRANT USAGE, DELETE ON Researchers, Projects IN SCHEMA public TO Researcher;
 
 GRANT USAGE, SELECT ON Evaluators, Projects, Releases, Documents, Tag IN SCHEMA public TO Evaluator;
 GRANT USAGE, INSERT ON Releases(state), Documents IN SCHEMA public TO Evaluator;
-GRANT USAGE, SELECT ON UPDATE ON Evaluators(name,surname,password,profile_picture,bio,pronouns), Releases(state) IN SCHEMA public TO Evaluator;
+GRANT USAGE, UPDATE ON Evaluators(name,surname,password,profile_picture,bio,pronouns), Releases(state) IN SCHEMA public TO Evaluator;
