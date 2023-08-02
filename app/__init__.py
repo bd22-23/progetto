@@ -72,7 +72,7 @@ def create_app():
 
     app.jinja_env.globals['bootstrap_is_hidden_field'] = is_hidden_field_filter
 
-    # create_roles(app, db)
+    create_roles(app, db)
 
     create_triggers(app, db)
 
