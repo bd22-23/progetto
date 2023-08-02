@@ -6,7 +6,9 @@ def create_triggers(app, db):
     triggers = [
         project_authors(),
         check_status_flow(),
-        delete_old_releases()
+        delete_old_releases(),
+        increase_evaluator_grade(),
+        delete_project_rejected()
     ]
 
     with app.app_context():
