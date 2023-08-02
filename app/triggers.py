@@ -151,4 +151,3 @@ def delete_project_rejected():
         FOR EACH ROW
         EXECUTE FUNCTION check_project_rejected();
     ''')
-
