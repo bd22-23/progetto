@@ -641,6 +641,15 @@ a.rejected:hover {
     box-shadow: rgba(15, 17, 21, 0.2) 0 3px 6px 0;
 }
 
+.select2-selection {
+    background-color: rgb(46, 52, 64) !important;
+}
+
+.select2-selection__choice {
+    color: rgb(236, 239, 244) !important;
+}
+
+
 
 
 
