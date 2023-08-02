@@ -53,11 +53,15 @@ def check_status_flow():
             IF OLD.status = 'rejected' OR OLD.status = 'accepted' THEN
                 RAISE EXCEPTION 'Non è possibile modificare lo stato di una release di un progetto concluso';
             END IF;
-            IF OLD.status = 'returned' AND NEW.status != 'waiting' THEN
-                RAISE EXCEPTION 'Non è possibile modificare lo stato in questo modo';
-            END IF;
             IF OLD.status = NEW.status THEN
                 RAISE EXCEPTION 'Non è possibile modificare lo stato in sè stesso';
+            END IF;
+            IF OLD.status = 'returned' AND NOT EXISTS(
+                SELECT * FROM releases WHERE created_at = (
+                    SELECT MAX(created_at) FROM releases
+                ) AND project = OLD.project
+            ) THEN
+                RAISE EXCEPTION 'Non è possibile modificare lo stato di una release in questo modo';
             END IF;
 
             RETURN NEW;
