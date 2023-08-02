@@ -50,18 +50,11 @@ def check_status_flow():
         CREATE OR REPLACE FUNCTION check_status()
         RETURNS TRIGGER AS $$
         BEGIN
-            IF OLD.status = 'rejected' OR OLD.status = 'accepted' THEN
+            IF OLD.status = 'rejected' OR OLD.status = 'accepted' OR old.status = 'returned' THEN
                 RAISE EXCEPTION 'Non è possibile modificare lo stato di una release di un progetto concluso';
             END IF;
             IF OLD.status = NEW.status THEN
                 RAISE EXCEPTION 'Non è possibile modificare lo stato in sè stesso';
-            END IF;
-            IF OLD.status = 'returned' AND NOT EXISTS(
-                SELECT * FROM releases WHERE created_at = (
-                    SELECT MAX(created_at) FROM releases
-                ) AND project = OLD.project
-            ) THEN
-                RAISE EXCEPTION 'Non è possibile modificare lo stato di una release in questo modo';
             END IF;
 
             RETURN NEW;
@@ -95,8 +88,28 @@ def delete_old_releases():
     ''')
 
 
+def increase_evaluator_grade():
+    return DDL('''\
+        CREATE OR REPLACE FUNCTION increase_evaluator_grade()
+        RETURNS TRIGGER AS $$
+        DECLARE
+            id uuid := NEW.evaluator_id;
+            num_releases INTEGER;
+        BEGIN
+            SELECT COUNT(*) INTO num_releases
+            FROM projects
+            WHERE evaluator_id = id;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        CREATE OR REPLACE TRIGGER increase_evaluator_grade_trigger
+        AFTER INSERT ON projects
+        FOR EACH ROW
+        EXECUTE FUNCTION increase_evaluator_grade();
+    ''')
+
+
 def delete_project_rejected():
-    pass
     return DDL('''\
         CREATE OR REPLACE FUNCTION check_project_rejected()
         RETURNS TRIGGER AS $$
