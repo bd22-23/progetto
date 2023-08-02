@@ -93,12 +93,11 @@ def increase_evaluator_grade():
         CREATE OR REPLACE FUNCTION increase_evaluator_grade()
         RETURNS TRIGGER AS $$
         DECLARE
-            id uuid := NEW.evaluator_id;
             num_releases INTEGER;
         BEGIN
             SELECT COUNT(*) INTO num_releases
             FROM projects
-            WHERE evaluator_id = id;
+            WHERE evaluator_id = NEW.evaluator_id;
         END;
         $$ LANGUAGE plpgsql;
 
@@ -113,8 +112,21 @@ def delete_project_rejected():
     return DDL('''\
         CREATE OR REPLACE FUNCTION check_project_rejected()
         RETURNS TRIGGER AS $$
+        DECLARE
+            status varchar;
         BEGIN
+            SELECT status INTO status
+            FROM releases
+            WHERE created_at = (
+                SELECT MAX(created_at)
+                FROM releases
+                WHERE project = id
+            );
+            IF(status != 'rejected') THEN
+                RAISE EXCEPTION 'Non puoi eliminare un progetto che non è stato rifiutato';
+            END IF;
             
+            RETURN OLD;
         END;
         $$ LANGUAGE plpgsql;
 
