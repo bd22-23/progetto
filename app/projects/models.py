@@ -1,7 +1,8 @@
 import enum
 
-from sqlalchemy import Column, String, UUID, ForeignKey, Enum, JSON
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, UUID, ForeignKey, Enum, JSON, event
+from sqlalchemy.orm import relationship, Session
+
 from app.main import CustomModel
 
 
@@ -50,3 +51,22 @@ class Tag(CustomModel):
         self.value = value
         db.session.commit()
         return self
+
+
+@event.listens_for(Tag.__table__, 'after_create')
+def insert_initial_values(target, connection, **kwargs):
+    session = Session(bind=connection)
+    session.add(Tag('scienza'))
+    session.add(Tag('informatica'))
+    session.add(Tag('ingegneria'))
+    session.add(Tag('matematica'))
+    session.add(Tag('arte'))
+    session.add(Tag('musica'))
+    session.add(Tag('letteratura'))
+    session.add(Tag('filosofia'))
+    session.add(Tag('storia'))
+    session.add(Tag('geografia'))
+    session.add(Tag('linguistica'))
+    session.add(Tag('economia'))
+    session.add(Tag('psicologia'))
+    session.commit()
