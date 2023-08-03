@@ -31,8 +31,10 @@ $do$ BEGIN
         BEGIN
             CREATE USER Researcher WITH PASSWORD 'password2';
             GRANT AppUser TO Researcher;
-            GRANT INSERT ON TABLE public.projects, public.releases, public.documents, public.authors, public.project_tags TO Researcher;
-            GRANT DELETE ON TABLE public.researchers, public.projects TO Researcher;
+            GRANT INSERT ON TABLE public.projects, public.releases, public.documents,
+                public.authors, public.project_tags TO Researcher;
+            GRANT DELETE ON TABLE public.researchers, public.projects, public.releases,
+                public.project_tags, public.documents TO Researcher;
             GRANT UPDATE(title, abstract) ON TABLE public.projects TO Researcher;
             GRANT UPDATE(name, surname, password, email) ON TABLE public.users TO Researcher;
             GRANT UPDATE(pronouns, affiliation) ON TABLE public.researchers TO Researcher;

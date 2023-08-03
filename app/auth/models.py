@@ -32,5 +32,5 @@ class User(CustomModel, UserMixin):
         self.password = password
 
     def delete(self, db):
-        db.session.delete(self)
-        db.session.commit()
+        db.delete(self)
+        db.commit()

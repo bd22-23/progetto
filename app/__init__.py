@@ -1,8 +1,11 @@
+import os
+
 import wtforms
-from flask import Flask, render_template
+from flask import Flask, render_template, g
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from sqlalchemy import text
+from flask_login import LoginManager, current_user
+from sqlalchemy import text, create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 from app.roles import create_roles
 from app.triggers import create_triggers
@@ -57,6 +60,30 @@ def create_app():
     from app.documents.controller import document
     app.register_blueprint(document)
 
+    user_credentials = {
+        'admin': ('admin', 'password1'),
+        'evaluator': ('evaluator', 'password3'),
+        'researcher': ('researcher', 'password2'),
+    }
+
+    def create_connection_pool(username, password):
+        connection_string = f'postgresql://{username}:{password}@{os.environ["DB_HOST"]}/{os.environ["DB_NAME"]}'
+        engine = create_engine(connection_string, pool_size=10, max_overflow=20)
+        return scoped_session(sessionmaker(bind=engine))
+
+    @app.before_request
+    def before_request():
+        if g.get('db_pool') is None:
+            if not current_user.is_authenticated:
+                g.db_pool = create_connection_pool(*user_credentials['researcher'])
+            else:
+                g.db_pool = create_connection_pool(*user_credentials[current_user.type])
+
+    @app.teardown_request
+    def teardown_request(exception):
+        if g.get('db_pool') is not None:
+            g.db_pool.remove()
+
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()
         arguments = rule.arguments if rule.arguments is not None else ()
@@ -79,13 +106,20 @@ def create_app():
 
     app.jinja_env.globals['bootstrap_is_hidden_field'] = is_hidden_field_filter
 
-    create_roles(app, db)
-
-    create_triggers(app, db)
+    # create_roles(app, db)
+    #
+    # create_triggers(app, db)
 
     @app.errorhandler(403)
-    def handle_unauthorized(e):
+    def handle_unauthorized():
         with app.app_context():
             return render_template('403.html'), 403
 
     return app
+
+
+def get_db_connection():
+    if g.db_pool is not None:
+        return g.db_pool()
+    else:
+        return None
