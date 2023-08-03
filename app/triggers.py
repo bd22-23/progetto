@@ -76,7 +76,7 @@ def delete_old_releases():
         RETURNS TRIGGER AS $$
         BEGIN
             IF OLD.status = 'rejected' OR OLD.status = 'accepted' THEN
-                DELETE FROM releases WHERE project = OLD.project AND id != OLD.id;
+                DELETE FROM releases WHERE project_id = OLD.project_id AND id != OLD.id;
             END IF;
             
             RETURN OLD;
@@ -95,27 +95,29 @@ def increase_evaluator_grade():
         CREATE OR REPLACE FUNCTION increase_evaluator_grade()
         RETURNS TRIGGER AS $$
         DECLARE
-            evaluator_id uuid;
+            e_id uuid;
             num_releases INTEGER;
         BEGIN
-            SELECT evaluator_id INTO evaluator_id
+            SELECT evaluator_id INTO e_id
             FROM projects
-            WHERE id = NEW.project
+            WHERE id = NEW.project_id
             LIMIT 1;
         
             SELECT COUNT(*) INTO num_releases
             FROM projects
-            WHERE evaluator_id = id;
+            WHERE e_id = id;
             
-            IF(num_releases == 15) THEN
+            IF (num_releases = 15) THEN
                 UPDATE evaluators
                 SET grade = 'intermediate'
-                WHERE id = evaluator_id;
-            ELSIF(num_releases == 50) THEN
+                WHERE id = e_id;
+            ELSIF (num_releases = 50) THEN
                 UPDATE evaluators
                 SET grade = 'expert'
-                WHERE id = evaluator_id;
+                WHERE id = e_id;
             END IF;
+            
+            RETURN NEW;
         END;
         $$ LANGUAGE plpgsql;
 
@@ -138,7 +140,7 @@ def delete_project_rejected():
             WHERE created_at = (
                 SELECT MAX(created_at)
                 FROM releases
-                WHERE project = id
+                WHERE project_id = id
             );
             IF(status != 'rejected') THEN
                 RAISE EXCEPTION 'Non puoi eliminare un progetto che non è stato rifiutato';

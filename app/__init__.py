@@ -1,7 +1,9 @@
 import wtforms
-from flask import Flask, render_template
+
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+
 from sqlalchemy import text
 
 from app.roles import create_roles
@@ -14,11 +16,8 @@ login_manager = LoginManager()
 def create_app():
     from app.auth import User
     from app.evaluators import Evaluator
-    from app.researchers import Researcher, Author
+    from app.researchers import Researcher
     from app.admin import Admin
-    from app.projects import Project, ProjectTag, Tag
-    from app.releases import Release
-    from app.documents import Document
 
     app = Flask(__name__)
     app.config.from_object('config.Development')
@@ -51,12 +50,6 @@ def create_app():
     from app.researchers.controller import researcher
     app.register_blueprint(researcher)
 
-    from app.releases.controller import release
-    app.register_blueprint(release)
-
-    from app.documents.controller import document
-    app.register_blueprint(document)
-
     def has_no_empty_params(rule):
         defaults = rule.defaults if rule.defaults is not None else ()
         arguments = rule.arguments if rule.arguments is not None else ()
@@ -82,10 +75,5 @@ def create_app():
     create_roles(app, db)
 
     create_triggers(app, db)
-
-    @app.errorhandler(403)
-    def handle_unauthorized(e):
-        with app.app_context():
-            return render_template('403.html'), 403
 
     return app
