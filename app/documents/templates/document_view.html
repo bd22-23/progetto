@@ -4,7 +4,7 @@
     Modifica {{ document.path }}
 {% endblock %}
 {% block app_content %}
-    <a href="{{ url_for('release.view', project_id=document.release.project, release_id=document.release.id) }}" class="btn btn-secondary btn-sm mb-3 round">
+    <a href="{{ url_for('release.view', project_id=document.release.project_id, release_id=document.release.id) }}" class="btn btn-secondary btn-sm mb-3 round">
         <i class="fas fa-arrow-left"></i>
         Indietro
     </a>

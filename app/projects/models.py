@@ -12,7 +12,7 @@ class Project(CustomModel):
     abstract = Column(String, nullable=False)
     authors = relationship('Researcher', secondary='authors', backref='project_author', lazy=True)
     tags = relationship('Tag', secondary='project_tags', backref='project_tag', lazy=True)
-    releases = relationship('Release', backref='project_release', lazy=True)
+    releases = relationship('Release', backref='project', lazy=True)
     evaluator_id = Column(UUID(as_uuid=True), ForeignKey('evaluators.id'), nullable=True)
 
     def __init__(self, title, abstract):
@@ -29,13 +29,13 @@ class Project(CustomModel):
 
 class ProjectTag(CustomModel):
     __tablename__ = 'project_tags'
-    project = Column(UUID(as_uuid=True), ForeignKey('projects.id', ondelete='CASCADE'), primary_key=True)
-    tag = Column(UUID(as_uuid=True), ForeignKey('tags.id', ondelete='CASCADE'), primary_key=True)
+    project_id = Column(UUID(as_uuid=True), ForeignKey('projects.id', ondelete='CASCADE'), primary_key=True)
+    tag_id = Column(UUID(as_uuid=True), ForeignKey('tags.id', ondelete='CASCADE'), primary_key=True)
 
-    def __init__(self, project, tag):
+    def __init__(self, project_id, tag_id):
         super().__init__()
-        self.project = project
-        self.tag = tag
+        self.project_id = project_id
+        self.tag_id = tag_id
 
 
 class Tag(CustomModel):
