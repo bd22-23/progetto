@@ -36,12 +36,12 @@ class Researcher(User):
 
 class Author(CustomModel):
     __tablename__ = 'authors'
-    project = Column(UUID(as_uuid=True), ForeignKey('projects.id'), primary_key=True)
-    researcher = Column(UUID(as_uuid=True), ForeignKey('researchers.id'), primary_key=True)
+    project_id = Column(UUID(as_uuid=True), ForeignKey('projects.id'), primary_key=True)
+    researcher_id = Column(UUID(as_uuid=True), ForeignKey('researchers.id'), primary_key=True)
 
-    def __init__(self, project, researcher):
+    def __init__(self, project_id, researcher_id):
         super().__init__()
-        self.project = project
-        self.researcher = researcher
+        self.project_id = project_id
+        self.researcher_id = researcher_id
 
 

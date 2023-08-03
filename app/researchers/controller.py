@@ -13,10 +13,10 @@ def profile(profile_id):
     user = Researcher.query.join(User, User.id == Researcher.id).filter_by(id=profile_id).first()
     form = EditResearcherForm(user)
     proj = Project.query \
-        .join(Author, Author.project == Project.id) \
-        .join(ProjectTag, ProjectTag.project == Project.id) \
-        .join(Tag, Tag.id == ProjectTag.tag) \
-        .filter(Author.researcher == user.id) \
+        .join(Author, Author.project_id == Project.id) \
+        .join(ProjectTag, ProjectTag.project_id == Project.id) \
+        .join(Tag, Tag.id == ProjectTag.tag_id) \
+        .filter(Author.researcher_id == user.id) \
         .all()
     if form.validate_on_submit():
         user.update(db, form.name.data, form.surname.data, form.email.data, form.affiliation.data,
