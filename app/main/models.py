@@ -11,7 +11,7 @@ class CustomModel(db.Model):
     id = Column(UUID(as_uuid=True),
                 server_default=func.public.uuid_generate_v4(),
                 nullable=False, primary_key=True)
-    created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    created_at = Column(DateTime, server_default=func.current_timestamp(), nullable=False)
 
     def __init__(self):
         pass
