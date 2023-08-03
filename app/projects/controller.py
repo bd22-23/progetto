@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, render_template, url_for, redirect, request, current_app
+from flask import Blueprint, render_template, url_for, redirect, request, current_app, abort
 from flask_login import current_user, login_required
 from sqlalchemy import desc, func, Integer, and_, or_
 
@@ -61,6 +61,8 @@ def view(project_id):
     users = Researcher.query.all()
     form = EditProjectForm(tags, proj, users)
     if form.validate_on_submit():
+        if current_user.id not in [author.researcher.id for author in proj.authors]:
+            return abort(403)
         proj.title = form.title.data
         proj.abstract = form.abstract.data
         proj.save(db)
@@ -100,12 +102,13 @@ def assign_evaluator(project_id, evaluator_id):
     proj.save(db)
     return redirect(url_for('project.view', project_id=proj.id))
 
-  
-  
+
 @project.route('/delete/<project_id>', methods=['GET', 'POST'])
 @login_required
 @researcher_only
 def delete(project_id):
     proj = Project.query.filter_by(id=project_id).first()
+    if current_user.id not in [author.researcher.id for author in proj.authors]:
+        return abort(403)
     proj.delete(db)
     return redirect(url_for('project.list'))

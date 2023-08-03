@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, render_template, redirect, abort
+from flask_login import current_user
+
 from app.auth import User
 from app.projects import Project, ProjectTag, Tag
 from app.researchers import Researcher, Author
@@ -19,6 +21,8 @@ def profile(profile_id):
         .filter(Author.researcher_id == user.id) \
         .all()
     if form.validate_on_submit():
+        if current_user.id != user.id:
+            return abort(403)
         user.update(db, form.name.data, form.surname.data, form.email.data, form.affiliation.data,
                     form.role.data, form.pronouns.data)
         return redirect('/researcher/profile/' + str(user.id))
