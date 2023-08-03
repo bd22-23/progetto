@@ -17,27 +17,26 @@ project = Blueprint('project', __name__, url_prefix='/project', template_folder=
 
 @project.route('/list', methods=['GET', 'POST'])
 def list():
-    with db.session(bind='appuser'):
-        tag = request.args.get('tag')
-        query = Project.query \
-            .join(Author, Author.project == Project.id) \
-            .join(ProjectTag, ProjectTag.project == Project.id) \
-            .join(Tag, Tag.id == ProjectTag.tag) \
-            .outerjoin(Release, Release.project_id == Project.id) \
-            .filter(ProjectTag.project == Project.id)
-        if tag:
-            query = query.filter(Tag.value == tag)
-        if not current_user.is_authenticated:
-            # If the user is not authenticated, show only the projects which are accepted or rejected
-            # (their latest release is accepted or rejected)
-            latest_release_subquery = db.session.query(Release.project_id, func.max(Release.created_at).label('latest_date')) \
-                .group_by(Release.project_id) \
-                .subquery()
-            query = query.join(latest_release_subquery, and_(Release.project_id == latest_release_subquery.c.project_id,
-                                                             Release.created_at == latest_release_subquery.c.latest_date)) \
-                .filter(or_(Release.status == Status.ACCEPTED, Release.status == Status.REJECTED))
-        projects = query.all()
-        return render_template('project_list.html', projects=projects, tag=tag)
+    tag = request.args.get('tag')
+    query = Project.query \
+        .join(Author, Author.project == Project.id) \
+        .join(ProjectTag, ProjectTag.project == Project.id) \
+        .join(Tag, Tag.id == ProjectTag.tag) \
+        .outerjoin(Release, Release.project == Project.id) \
+        .filter(ProjectTag.project == Project.id)
+    if tag:
+        query = query.filter(Tag.value == tag)
+    if not current_user.is_authenticated:
+        # If the user is not authenticated, show only the projects which are accepted or rejected
+        # (their latest release is accepted or rejected)
+        latest_release_subquery = db.session.query(Release.project, func.max(Release.created_at).label('latest_date')) \
+            .group_by(Release.project) \
+            .subquery()
+        query = query.join(latest_release_subquery, and_(Release.project == latest_release_subquery.c.project,
+                                                         Release.created_at == latest_release_subquery.c.latest_date)) \
+            .filter(or_(Release.status == Status.ACCEPTED, Release.status == Status.REJECTED))
+    projects = query.all()
+    return render_template('project_list.html', projects=projects, tag=tag)
 
 
 @project.route('/view/<project_id>', methods=['GET', 'POST'])
@@ -47,7 +46,7 @@ def view(project_id):
         .join(ProjectTag, ProjectTag.project == Project.id) \
         .join(Tag, Tag.id == ProjectTag.tag) \
         .outerjoin(Evaluator, Evaluator.id == Project.evaluator_id) \
-        .outerjoin(Release, Release.project_id == Project.id) \
+        .outerjoin(Release, Release.project == Project.id) \
         .filter(Project.id == project_id) \
         .order_by(
             desc(Release.created_at),
@@ -101,6 +100,7 @@ def assign_evaluator(project_id, evaluator_id):
     proj.save(db)
     return redirect(url_for('project.view', project_id=proj.id))
 
+  
   
 @project.route('/delete/<project_id>', methods=['GET', 'POST'])
 @login_required

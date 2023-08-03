@@ -1,6 +1,5 @@
 from flask_login import UserMixin
 from sqlalchemy import Column, String
-
 from app import login_manager
 from app.main import CustomModel
 

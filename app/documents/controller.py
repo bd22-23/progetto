@@ -5,7 +5,6 @@ from flask_login import current_user
 
 from app import db
 from app.documents import Document
-from app.projects import Project
 from app.releases import Release, Status
 
 document = Blueprint('document', __name__, url_prefix='/document', template_folder='templates')
@@ -15,13 +14,14 @@ document = Blueprint('document', __name__, url_prefix='/document', template_fold
 def view(document_id):
     doc = Document.query \
         .join(Release, Release.id == Document.release_id) \
-        .join(Project, Project.id == Release.project_id) \
         .filter(Document.id == document_id) \
         .first()
-    editable = current_user.type == 'evaluator' \
+
+    editable = current_user.is_authenticated \
+               and current_user.type == 'evaluator' \
                and doc.release.status == Status.WAITING \
-               and doc.release.project.evaluator_id == current_user.id
-    doc.path = url_for('static', filename='uploads/' + str(doc.release.project_id) + '/' + doc.path)
+               and doc.release.evaluator_id == current_user.id
+    doc.path = url_for('static', filename='uploads/' + str(doc.release.project) + '/' + doc.path)
     return render_template('document_view.html', document=doc, editable=editable)
 
 
