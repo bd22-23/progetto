@@ -138,7 +138,7 @@ def delete_project_rejected():
             WHERE created_at = (
                 SELECT MAX(created_at)
                 FROM releases
-                WHERE project = id
+                WHERE project_id = id
             );
             IF(status != 'rejected') THEN
                 RAISE EXCEPTION 'Non puoi eliminare un progetto che non è stato rifiutato';
