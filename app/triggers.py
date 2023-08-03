@@ -95,7 +95,7 @@ def increase_evaluator_grade():
         CREATE OR REPLACE FUNCTION increase_evaluator_grade()
         RETURNS TRIGGER AS $$
         DECLARE
-            evaluator_id uuid;
+            e_id uuid;
             num_releases INTEGER;
         BEGIN
             SELECT evaluator_id INTO evaluator_id
@@ -107,14 +107,14 @@ def increase_evaluator_grade():
             FROM projects
             WHERE evaluator_id = id;
             
-            IF(num_releases == 15) THEN
+            IF (num_releases = 15) THEN
                 UPDATE evaluators
                 SET grade = 'intermediate'
-                WHERE id = evaluator_id;
-            ELSIF(num_releases == 50) THEN
+                WHERE id = e_id;
+            ELSIF (num_releases = 50) THEN
                 UPDATE evaluators
                 SET grade = 'expert'
-                WHERE id = evaluator_id;
+                WHERE id = e_id;
             END IF;
         END;
         $$ LANGUAGE plpgsql;
