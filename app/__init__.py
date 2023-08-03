@@ -61,6 +61,7 @@ def create_app():
     app.register_blueprint(document)
 
     user_credentials = {
+        'appuser': ('appuser', 'password'),
         'admin': ('admin', 'password1'),
         'evaluator': ('evaluator', 'password3'),
         'researcher': ('researcher', 'password2'),
@@ -75,7 +76,7 @@ def create_app():
     def before_request():
         if g.get('db_pool') is None:
             if not current_user.is_authenticated:
-                g.db_pool = create_connection_pool(*user_credentials['researcher'])
+                g.db_pool = create_connection_pool(*user_credentials['appuser'])
             else:
                 g.db_pool = create_connection_pool(*user_credentials[current_user.type])
 
