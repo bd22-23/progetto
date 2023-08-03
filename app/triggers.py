@@ -29,8 +29,8 @@ def project_authors():
             researcher_id := OLD.id;
             SELECT COUNT(*) INTO num_authors
             FROM authors
-            WHERE researcher_id IN (SELECT researcher_id AS id FROM authors WHERE project IN
-                (SELECT project FROM authors WHERE researcher_id = id) );
+            WHERE researcher_id IN (SELECT researcher_id AS id FROM authors WHERE project_id IN
+                (SELECT project_id FROM authors WHERE researcher_id = id) );
         
             IF num_authors <= 1 THEN
                 RAISE EXCEPTION 'Non è possibile eliminare il ricercatore perché è l''unico autore collegato ad un progetto.';
@@ -76,7 +76,7 @@ def delete_old_releases():
         RETURNS TRIGGER AS $$
         BEGIN
             IF OLD.status = 'rejected' OR OLD.status = 'accepted' THEN
-                DELETE FROM releases WHERE project = OLD.project AND id != OLD.id;
+                DELETE FROM releases WHERE project_id = OLD.project_id AND id != OLD.id;
             END IF;
             
             RETURN OLD;
@@ -98,14 +98,14 @@ def increase_evaluator_grade():
             e_id uuid;
             num_releases INTEGER;
         BEGIN
-            SELECT evaluator_id INTO evaluator_id
+            SELECT evaluator_id INTO e_id
             FROM projects
             WHERE id = NEW.project
             LIMIT 1;
         
             SELECT COUNT(*) INTO num_releases
             FROM projects
-            WHERE evaluator_id = id;
+            WHERE evaluator_id = e_id;
             
             IF (num_releases = 15) THEN
                 UPDATE evaluators
