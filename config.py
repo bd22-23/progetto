@@ -20,6 +20,8 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URI']
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    UPLOAD_FOLDER = os.path.join(base_dir, 'app', 'static', 'uploads')
+
 
 class Production(Config):
     pass

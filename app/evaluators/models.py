@@ -1,8 +1,6 @@
 import enum
-
-from jinja2 import Template
 from sqlalchemy import Column, String, Enum, ForeignKey, UUID
-
+from sqlalchemy.orm import relationship
 from app.auth.models import User
 
 
@@ -18,9 +16,7 @@ class Evaluator(User):
     bio = Column(String)
     pronouns = Column(String)
     grade = Column(Enum(Grade, values_callable=lambda x: [str(member.value) for member in Grade]), nullable=False)
-
-    template = Template('{{ Grade[db_value].value }} == {{ db_value }}')
-    template.globals['Grade'] = Grade
+    projects = relationship('Project', backref='evaluator', lazy=True)
 
     __mapper_args__ = {
         'polymorphic_identity': 'evaluator',
@@ -32,11 +28,6 @@ class Evaluator(User):
         self.grade = grade
         self.bio = bio
         self.pronouns = pronouns
-
-    def save(self, db):
-        db.session.add(self)
-        db.session.commit()
-        return self
 
     def update(self, db, name, surname, email, bio, pronouns, grade=None):
         self.name = name if name is not None else self.name

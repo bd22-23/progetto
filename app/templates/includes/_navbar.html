@@ -3,25 +3,38 @@
     <nav class="side-nav" role="navigation">
         <ul>
             {% if current_user.is_authenticated %}
-                {% set navigation_bar = [
-                    ["main.index", "📑 Papers"],
-                    ["projects.index", "Progetti"]
-                ] -%}
                 {% if current_user.type == 'admin' %}
-                    {% set navigation_bar = navigation_bar + [
+                    {% set navigation_bar = [
+                        ["main.index", "📑 Papers"],
+                        ["project.list", "Progetti"],
                         [None, "Admin Panel", [
-                            ["admin.evaluators", "Valutatori"],
+                            ["admin.evaluators", "Relatori"],
                             ["admin.researchers", "Ricercatori"],
                         ]],
+                        ["auth.logout", "Logout"]
                     ] -%}
                 {% endif %}
-                {% set navigation_bar = navigation_bar + [
-                    ["auth.logout", "Logout"],
-                ] -%}
+                {% if current_user.type == 'evaluator' %}
+                    {% set navigation_bar = [
+                        ["main.index", "📑 Papers"],
+                        ["project.list", "Progetti"],
+                        ["evaluator.profile", "Profilo"],
+                        ["auth.logout", "Logout"]
+                    ] -%}
+                {% endif %}
+                {% if current_user.type == 'researcher' %}
+                    {% set navigation_bar = [
+                        ["main.index", "📑 Papers"],
+                        ["project.list", "Progetti"],
+                        ["researcher.profile", "Profilo"],
+                        ["project.new", "Crea nuovo progetto"],
+                        ["auth.logout", "Logout"]
+                    ] -%}
+                {% endif %}
             {% else %}
                 {% set navigation_bar = [
                     ["main.index", "📑 Papers"],
-                    ["projects.index", "Progetti"],
+                    ["project.list", "Progetti"],
                     ["auth.login", "Login"],
                     ["auth.register", "Registrazione"],
                 ] -%}
@@ -39,7 +52,11 @@
                             {{ label }}
                         </a>
                     {% else %}
-                        <a href="{{ url_for(endpoint) }}">{{ label }}</a>
+                        {% if label == 'Profilo' %}
+                            <a href="{{ url_for(endpoint, profile_id=current_user.id) }}">{{ label }}</a>
+                        {% else %}
+                            <a href="{{ url_for(endpoint) }}">{{ label }}</a>
+                        {% endif %}
                     {% endif %}
                     {% if submenu %}
                         <div class="sub-nav">

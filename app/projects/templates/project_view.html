@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}
+    {{ project.title }}
+{% endblock %}
+{% block app_content %}
+    <div class="my-3 d-flex flex-row justify-content-between">
+    {% if project.releases %}
+        <div class="status-pill {{ project.releases[-1].status.value }}">{{ project.releases[-1].status.label }}</div>
+    {% else %}
+        <div class="status-pill awaiting-first-version">Richiesta prima versione</div>
+    {% endif %}
+    {% if current_user.id in project.authors|map(attribute='id') %}
+        <div class="g-2">
+            <a href="{{ url_for('project.delete', project_id=project.id) }}" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+            <button class="btn btn-primary js-edit-button" js-edit-area-id="edit-project"><i class="bi bi-pencil-fill"></i></button>
+        </div>
+    {% endif %}
+    </div>
+    <div class="js-editable-info-area">
+        <div>
+            <h1>{{ project.title }}</h1>
+            <p>
+            {% for tag in project.tags %}
+                <span class="badge rounded-pill tag-pill">
+                    <a href="{{ url_for('project.list', tag=tag.value) }}">{{ tag.value }}</a>
+                </span>
+            {% endfor %}
+            </p>
+            <h6 class="text-secondary">Creato il {{ project.created_at.strftime('%d/%m/%Y') }}</h6>
+        </div>
+        <p class="mb-2">Autori:
+            {% for author in project.authors %}
+                <a href="{{ url_for('researcher.profile', profile_id=author.id) }}">
+                    {{ author.name }} {{ author.surname }}
+                    {% if author.id == current_user.id %}
+                        <span class="badge rounded-pill orange-tag-pill">Tu</span>
+                    {% endif %}
+                </a>
+                {% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        {% if project.evaluator %}
+            <p class="mb-2">Relatore:
+                <a href="{{ url_for('evaluator.profile', profile_id=project.evaluator.id) }}">
+                    {{ project.evaluator.name }} {{ project.evaluator.surname }}
+                    {% if project.evaluator.id == current_user.id %}
+                        <span class="badge rounded-pill orange-tag-pill">Tu</span>
+                    {% endif %}
+                </a>
+            </p>
+        {% endif %}
+        {% if current_user.type == 'evaluator' and not project.evaluator %}
+            <a href="{{ url_for('project.assign_evaluator', project_id=project.id, evaluator_id=current_user.id) }}" class="btn btn-secondary w-100 first-version-btn">
+                <span>Assegnati come Relatore!</span>
+            </a>
+        {% endif %}
+        {% if project.releases %}
+            {% if not project.releases[-1].status.value == 'accepted' and not project.releases[-1].status.value == 'rejected' %}
+                <div class="mb-2">
+                    Versioni:
+                    {% for release in project.releases %}
+                        <a class="btn btn-secondary btn-sm" href="{{ url_for('release.view', project_id=project.id, release_id=release.id) }}">{{ release.version }}</a>{% if not loop.last %} {% endif %}
+                    {% endfor %}
+                </div>
+                {% if current_user.type == 'researcher' %}
+                    {% if project.releases[-1].status.value == 'returned' %}
+                        <a href="{{ url_for('release.new', project_id=project.id) }}" class="btn btn-secondary w-100">Nuova Versione</a>
+                    {% elif project.releases[-1].status.value == 'waiting' %}
+                        <div class="tooltip-wrapper" data-bs-placement="top" data-bs-toggle="tooltip" data-bs-title="Non puoi creare versioni se sei in attesa!">
+                            <button class="btn btn-secondary w-100 disabled">Nuova Versione</button>
+                        </div>
+                    {% endif %}
+                {% elif current_user.type == 'evaluator'
+                    and project.releases[-1].status.value == 'waiting'
+                    and project.evaluator.id == current_user.id %}
+                    <a href="{{ url_for('release.view', project_id=project.id, release_id=project.releases[-1].id) }}" class="btn btn-secondary w-100">Valuta</a>
+                {% endif %}
+            {% endif %}
+        {% else %}
+            {% if current_user.type == 'researcher' %}
+                <a href="{{ url_for('release.new', project_id=project.id) }}" class="btn btn-secondary w-100 first-version-btn">
+                    <span>Crea la prima Versione!</span>
+                </a>
+            {% endif %}
+        {% endif %}
+
+        <hr class="solid mb-4">
+        <h3 class="mb-4">Abstract</h3>
+        <p>{{ project.abstract }}</p>
+    </div>
+
+    <div class="col-9 js-editable-edit-area d-none" id="edit-project">
+        {{ wtf.quick_form(form) }}
+    </div>
+
+
+    {% if project.releases and (project.releases[-1].status.value == 'accepted' or project.releases[-1].status.value == 'rejected') %}
+        <hr>
+        <h3 class="mb-4">Documenti</h3>
+        {% for doc in project.releases[-1].documents %}
+            <div class="card pdf-card mb-3" style="max-width: 540px;">
+                <a href="{{ url_for('document.view', document_id=doc.id) }}">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ doc.image_data_url }}" class="img-fluid rounded-start" alt="{{ doc.path }}">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ doc.path }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        window.onload = function () {
+            $('.js-edit-button').click(function () {
+                $(this).closest(':has(.js-editable-info-area)').find('.js-editable-info-area').addClass('d-none');
+                $('#' + $(this).attr('js-edit-area-id')).removeClass('d-none');
+            });
+            $('.js-editable-stop-edit-button').on('click', function() {
+                $(this).closest(':has(.js-editable-info-area)').find('.js-editable-info-area').removeClass('d-none');
+                $(this).closest(".js-editable-edit-area").addClass('d-none');
+            });
+            $('.js-editable-authors').select2({
+                theme: "bootstrap-5"
+            });
+        }
+    </script>
+{% endblock %}

@@ -4,7 +4,7 @@
     Profilo
 {% endblock %}
 {% block app_content %}
-    <div class="container border ms-0 p-4 rounded border-secondary">
+    <div class="container ms-0 p-4 profile-container">
         <div class="row">
             <div class="col-3 text-center p-0">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="user" class="img-fluid rounded-circle" style="width: 18rem">
@@ -24,49 +24,13 @@
                 {% endif %}
                 <span class="mt-3 d-block">{{ user.email }}</span>
                 <span class="mt-3 d-block">{{ user.pronouns }}</span>
-                <button class="mt-md-2 btn btn-sm btn-secondary js-edit-button mt-1" js-edit-area-id="edit-evaluator-profile">Modifica</button>
+                {% if user.id == current_user.id or current_user.type == "admin" %}
+                    <button class="mt-2 btn btn-sm btn-secondary js-edit-button" js-edit-area-id="edit-evaluator-profile">Modifica</button>
+                {% endif %}
             </div>
             <div class="col-9 js-editable-edit-area d-none" id="edit-evaluator-profile">
-                <form action="{{ url_for('evaluator.profile_update', profile_id=user.id) }}" method="POST">
-                    <div class="mb-2">
-                        <label for="edit-evaluator-name" class="form-label mb-1">Nome</label>
-                        <input id="edit-evaluator-name" name="name" class="form-control form-control-sm" value="{{ user.name }}">
-                    </div>
-                    <div class="mb-2">
-                        <label for="edit-evaluator-surname" class="form-label mb-1">Cognome</label>
-                        <input id="edit-evaluator-surname" name="surname" class="form-control form-control-sm" value="{{ user.surname }}">
-                    </div>
-                    <div class="mb-2">
-                        <label for="edit-evaluator-bio" class="form-label mb-1">Bio</label>
-                        <input id="edit-evaluator-bio" name="bio" class="form-control form-control-sm" value="{{ user.bio }}">
-                    </div>
-                    <div class="mb-2">
-                        <label for="edit-evaluator-email" class="form-label mb-1">Email</label>
-                        <input id="edit-evaluator-email" name="email" class="is-valid form-control form-control-sm js-auto-check-email" value="{{ user.email }}">
-                        <div class="d-none js-invalid-input invalid-feedback"></div>
-                    </div>
-                    <div class="mb-2">
-                        <label for="edit-evaluator-pronouns" class="form-label mb-1">Pronomi</label>
-                        <input id="edit-evaluator-pronouns" name="pronouns" class="form-control form-control-sm" value="{{ user.pronouns }}">
-                    </div>
-                    <button class="mt-2 btn btn-sm btn-secondary js-editable-stop-edit-button" type="reset">Annulla</button>
-                    <button class="mt-2 btn btn-sm btn-primary" type="submit">Salva</button>
-                </form>
+               {{ wtf.quick_form(form) }}
             </div>
         </div>
     </div>
-
-    <script>
-        window.onload = function () {
-            $('.js-edit-button').click(function () {
-                $(this).closest(':has(.js-editable-info-area)').find('.js-editable-info-area').addClass('d-none');
-                $('#' + $(this).attr('js-edit-area-id')).removeClass('d-none');
-            });
-            $('.js-editable-stop-edit-button').on('click', function() {
-                $(this).closest(':has(.js-editable-info-area)').find('.js-editable-info-area').removeClass('d-none');
-                $(this).closest(".js-editable-edit-area").addClass('d-none');
-            });
-        }
-    </script>
-
 {% endblock %}
