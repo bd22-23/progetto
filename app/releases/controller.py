@@ -26,7 +26,7 @@ def convert_pdf_to_data_url(pdf_path):
 def view(project_id, release_id):
     rel = Release.query\
         .join(Document, Document.release_id == Release.id)\
-        .filter(Release.project == project_id)\
+        .filter(Release.project_id == project_id)\
         .filter(Release.id == release_id)\
         .first()
     for document in rel.documents:
@@ -47,13 +47,13 @@ def update(project_id, release_id):
 @release.route('/<project_id>/new', methods=['GET', 'POST'])
 def new(project_id):
     last_release = Release.query\
-        .filter(Release.project == project_id)\
+        .filter(Release.project_id == project_id)\
         .order_by(desc(Release.created_at))\
         .first()
     form = ReleaseForm(last_release.version if last_release else None)
     if form.validate_on_submit():
         rel = Release(
-            project=project_id,
+            project_id=project_id,
             version=form.version.data,
             status=Status.WAITING
         ).save(db)

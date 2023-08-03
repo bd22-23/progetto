@@ -63,7 +63,7 @@
                         <a class="btn btn-secondary btn-sm" href="{{ url_for('release.view', project_id=project.id, release_id=release.id) }}">{{ release.version }}</a>{% if not loop.last %} {% endif %}
                     {% endfor %}
                 </div>
-                {% if current_user.type == 'researcher' %}
+                {% if current_user.type == 'researcher' and current_user.id in project.authors|map(attribute='id') %}
                     {% if project.releases[-1].status.value == 'returned' %}
                         <a href="{{ url_for('release.new', project_id=project.id) }}" class="btn btn-secondary w-100">Nuova Versione</a>
                     {% elif project.releases[-1].status.value == 'waiting' %}
@@ -78,7 +78,7 @@
                 {% endif %}
             {% endif %}
         {% else %}
-            {% if current_user.type == 'researcher' %}
+            {% if current_user.type == 'researcher' and current_user.id in project.authors|map(attribute='id') %}
                 <a href="{{ url_for('release.new', project_id=project.id) }}" class="btn btn-secondary w-100 first-version-btn">
                     <span>Crea la prima Versione!</span>
                 </a>

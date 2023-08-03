@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect
-from flask_login import login_required
+from flask import Blueprint, render_template, redirect, abort
+from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
 from app.admin import admin_only
 from app.auth import User
@@ -15,6 +15,8 @@ def profile(profile_id):
     user = Evaluator.query.join(User, User.id == Evaluator.id).filter_by(id=profile_id).first()
     form = EditProfileForm(user)
     if form.validate_on_submit():
+        if current_user.id != user.id:
+            return abort(403)
         user.name = form.name.data
         user.surname = form.surname.data
         user.bio = form.bio.data
