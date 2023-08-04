@@ -20,9 +20,8 @@ def list():
     db = get_db_connection()
     tag = request.args.get('tag')
     query = db.query(Project) \
-        .join(Author, Author.project_id == Project.id) \
-        .join(ProjectTag, ProjectTag.project_id == Project.id) \
-        .join(Tag, Tag.id == ProjectTag.tag_id) \
+        .join(Researcher, Project.researchers) \
+        .join(Tag, Project.tags) \
         .outerjoin(Release, Release.project_id == Project.id) \
         .filter(ProjectTag.project_id == Project.id)
     if tag:
@@ -44,9 +43,8 @@ def list():
 def view(project_id):
     db = get_db_connection()
     proj = db.query(Project) \
-        .join(Author, Author.project_id == Project.id) \
-        .join(ProjectTag, ProjectTag.project_id == Project.id) \
-        .join(Tag, Tag.id == ProjectTag.tag_id) \
+        .join(Researcher, Project.researchers) \
+        .join(Tag, Project.tags) \
         .outerjoin(Evaluator, Evaluator.id == Project.evaluator_id) \
         .outerjoin(Release, Release.project_id == Project.id) \
         .filter(Project.id == project_id) \
@@ -90,7 +88,10 @@ def new():
             title=form.title.data,
             abstract=form.abstract.data
         ).save(db)
-        Author(proj.id, current_user.id).save(db)
+        Author(
+            project_id=proj.id,
+            researcher_id=current_user.id
+        ).save(db)
         os.makedirs(os.path.dirname(current_app.config['UPLOAD_FOLDER'] + '/' + str(proj.id) + '/'), exist_ok=True)
         for tag in form.tags.data:
             ProjectTag(proj.id, tag).save(db)
@@ -113,7 +114,7 @@ def assign_evaluator(project_id, evaluator_id):
 def delete(project_id):
     db = get_db_connection()
     proj = db.query(Project).filter_by(id=project_id).first()
-    if current_user.id not in [author.id for author in proj.authors]:
+    if current_user.id not in [author.id for author in proj.researchers]:
         return abort(403)
     proj.delete(db)
     return redirect(url_for('project.list'))

@@ -30,7 +30,3 @@ class User(CustomModel, UserMixin):
         self.surname = surname
         self.email = email
         self.password = password
-
-    def delete(self, db):
-        db.delete(self)
-        db.commit()

@@ -10,8 +10,8 @@ class Project(CustomModel):
     __tablename__ = 'projects'
     title = Column(String, nullable=False)
     abstract = Column(String, nullable=False)
-    authors = relationship('Researcher', secondary='authors', backref='project_author', lazy=True)
-    tags = relationship('Tag', secondary='project_tags', backref='project_tag', lazy=True)
+    researchers = relationship('Researcher', secondary='authors', back_populates='projects', lazy=True)
+    tags = relationship('Tag', secondary='project_tags', back_populates='projects', lazy=True)
     releases = relationship('Release', backref='project', lazy=True)
     evaluator_id = Column(UUID(as_uuid=True), ForeignKey('evaluators.id'), nullable=True)
 
@@ -41,7 +41,7 @@ class ProjectTag(CustomModel):
 class Tag(CustomModel):
     __tablename__ = 'tags'
     value = Column(String, nullable=False)
-    project = relationship('Project', secondary='project_tags', backref='tag', lazy=True, passive_deletes=True)
+    projects = relationship('Project', secondary='project_tags', back_populates='tags', lazy=True, passive_deletes=True)
 
     def __init__(self, value):
         super().__init__()

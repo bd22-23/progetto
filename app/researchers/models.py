@@ -10,7 +10,7 @@ class Researcher(User):
     affiliation = Column(String, nullable=False)
     role = Column(String)
     pronouns = Column(String)
-    projects = relationship('Project', secondary='authors', backref='researcher', lazy=True)
+    projects = relationship('Project', secondary='authors', back_populates='researchers', lazy=True)
 
     __mapper_args__ = {
         'polymorphic_identity': 'researcher',
@@ -36,8 +36,8 @@ class Researcher(User):
 
 class Author(CustomModel):
     __tablename__ = 'authors'
-    project_id = Column(UUID(as_uuid=True), ForeignKey('projects.id', ondelete='CASCADE'), primary_key=True)
-    researcher_id = Column(UUID(as_uuid=True), ForeignKey('researchers.id', ondelete='CASCADE'), primary_key=True)
+    project_id = Column(UUID(as_uuid=True), ForeignKey('projects.id'), primary_key=True)
+    researcher_id = Column(UUID(as_uuid=True), ForeignKey('researchers.id'), primary_key=True)
 
     def __init__(self, project_id, researcher_id):
         super().__init__()

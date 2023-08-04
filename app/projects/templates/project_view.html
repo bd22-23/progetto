@@ -10,7 +10,7 @@
         {% else %}
             <div class="status-pill awaiting-first-version">Richiesta prima versione</div>
         {% endif %}
-        {% if current_user.id in project.authors|map(attribute='id') %}
+        {% if current_user.id in project.researchers|map(attribute='id') %}
             <div class="g-2">
                 <a href="{{ url_for('project.delete', project_id=project.id) }}" class="btn btn-danger mx-3"><i class="bi bi-trash-fill"></i></a>
                 <button class="btn btn-primary js-edit-button" js-edit-area-id="edit-project"><i class="bi bi-pencil-fill"></i></button>
@@ -30,7 +30,7 @@
             <h6 class="text-secondary">Creato il {{ project.created_at.strftime('%d/%m/%Y') }}</h6>
         </div>
         <p class="mb-2">Autori:
-            {% for author in project.authors %}
+            {% for author in project.researchers %}
                 <a href="{{ url_for('researcher.profile', profile_id=author.id) }}">
                     {{ author.name }} {{ author.surname }}
                     {% if author.id == current_user.id %}
@@ -63,7 +63,7 @@
                         <a class="btn btn-secondary btn-sm" href="{{ url_for('release.view', project_id=project.id, release_id=release.id) }}">{{ release.version }}</a>{% if not loop.last %} {% endif %}
                     {% endfor %}
                 </div>
-                {% if current_user.type == 'researcher' and current_user.id in project.authors|map(attribute='id') %}
+                {% if current_user.type == 'researcher' and current_user.id in project.researchers|map(attribute='id') %}
                     {% if project.releases[-1].status.value == 'returned' %}
                         <a href="{{ url_for('release.new', project_id=project.id) }}" class="btn btn-secondary w-100">Nuova Versione</a>
                     {% elif project.releases[-1].status.value == 'waiting' %}
@@ -78,7 +78,7 @@
                 {% endif %}
             {% endif %}
         {% else %}
-            {% if current_user.type == 'researcher' and current_user.id in project.authors|map(attribute='id') %}
+            {% if current_user.type == 'researcher' and current_user.id in project.researchers|map(attribute='id') %}
                 <a href="{{ url_for('release.new', project_id=project.id) }}" class="btn btn-secondary w-100 first-version-btn">
                     <span>Crea la prima Versione!</span>
                 </a>
