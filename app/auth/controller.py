@@ -63,7 +63,7 @@ def login():
 @admin_only
 def delete_user(user_id):
     db = get_db_connection()
-    user = db(User).query.filter_by(id=user_id).first()
+    user = db.query(User).filter_by(id=user_id).first()
     user.delete(db)
     return redirect(url_for('main.index'))
 

@@ -52,10 +52,10 @@ def check_status_flow():
         CREATE OR REPLACE FUNCTION check_status()
         RETURNS TRIGGER AS $$
         BEGIN
-            IF OLD.status = 'rejected' OR OLD.status = 'accepted' OR old.status = 'returned' THEN
+            IF (OLD.status = 'rejected' OR OLD.status = 'accepted' OR OLD.status = 'returned') THEN
                 RAISE EXCEPTION 'Non è possibile modificare lo stato di una release di un progetto concluso';
             END IF;
-            IF OLD.status = NEW.status THEN
+            IF (NEW.status = OLD.status) THEN
                 RAISE EXCEPTION 'Non è possibile modificare lo stato in sè stesso';
             END IF;
 
@@ -79,7 +79,7 @@ def delete_old_releases():
                 DELETE FROM releases WHERE project_id = OLD.project_id AND id != OLD.id;
             END IF;
             
-            RETURN OLD;
+            RETURN NEW;
         END;
         $$ LANGUAGE plpgsql;
 
@@ -100,7 +100,7 @@ def increase_evaluator_grade():
         BEGIN
             SELECT evaluator_id INTO e_id
             FROM projects
-            WHERE id = NEW.project
+            WHERE id = NEW.project_id
             LIMIT 1;
         
             SELECT COUNT(*) INTO num_releases
@@ -116,6 +116,8 @@ def increase_evaluator_grade():
                 SET grade = 'expert'
                 WHERE id = e_id;
             END IF;
+            
+            RETURN NEW;
         END;
         $$ LANGUAGE plpgsql;
 

@@ -61,7 +61,7 @@ def view(project_id):
     users = db.query(Researcher).all()
     form = EditProjectForm(tags, proj, users)
     if form.validate_on_submit():
-        if current_user.id not in [author.id for author in proj.authors]:
+        if current_user.id not in [researcher.id for researcher in proj.researchers]:
             return abort(403)
         proj.title = form.title.data
         proj.abstract = form.abstract.data

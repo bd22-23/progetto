@@ -47,3 +47,9 @@ class Release(CustomModel):
         self.project_id = project_id
         self.version = version
         self.status = status
+
+    def update(self, db, status, version=None):
+        self.version = version if version is not None else self.version
+        self.status = status if status is not None else self.status
+        db.commit()
+        return self

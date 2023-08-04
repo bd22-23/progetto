@@ -13,7 +13,7 @@ evaluator = Blueprint('evaluator', __name__, url_prefix='/evaluator', template_f
 @evaluator.route('/profile/<profile_id>', methods=['GET', 'POST'])
 def profile(profile_id):
     db = get_db_connection()
-    user = db.query(Evaluator).query.join(User, User.id == Evaluator.id).filter_by(id=profile_id).first()
+    user = db.query(Evaluator).join(User, User.id == Evaluator.id).filter_by(id=profile_id).first()
     form = EditProfileForm(user)
     if form.validate_on_submit():
         if current_user.id != user.id:
