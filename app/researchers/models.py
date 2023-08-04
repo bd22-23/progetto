@@ -36,8 +36,8 @@ class Researcher(User):
 
 class Author(CustomModel):
     __tablename__ = 'authors'
-    project_id = Column(UUID(as_uuid=True), ForeignKey('projects.id'), primary_key=True)
-    researcher_id = Column(UUID(as_uuid=True), ForeignKey('researchers.id'), primary_key=True)
+    project_id = Column(UUID(as_uuid=True), ForeignKey('projects.id', ondelete='CASCADE'), primary_key=True)
+    researcher_id = Column(UUID(as_uuid=True), ForeignKey('researchers.id', ondelete='CASCADE'), primary_key=True)
 
     def __init__(self, project_id, researcher_id):
         super().__init__()

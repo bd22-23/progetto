@@ -63,15 +63,15 @@ def view(project_id):
     users = db.query(Researcher).all()
     form = EditProjectForm(tags, proj, users)
     if form.validate_on_submit():
-        if current_user.id not in [author.researcher.id for author in proj.authors]:
+        if current_user.id not in [author.id for author in proj.authors]:
             return abort(403)
         proj.title = form.title.data
         proj.abstract = form.abstract.data
         proj.save(db)
-        db.query(ProjectTag).filter_by(project=proj.id).delete()
+        db.query(ProjectTag).filter_by(project_id=proj.id).delete()
         for tag in form.tags.data:
             ProjectTag(proj.id, tag).save(db)
-        db.query(Author).query.filter_by(project=proj.id).delete()
+        db.query(Author).filter_by(project_id=proj.id).delete()
         for author in form.authors.data:
             Author(proj.id, author).save(db)
         return redirect(url_for('project.view', project_id=proj.id))
@@ -113,7 +113,7 @@ def assign_evaluator(project_id, evaluator_id):
 def delete(project_id):
     db = get_db_connection()
     proj = db.query(Project).filter_by(id=project_id).first()
-    if current_user.id not in [author.researcher.id for author in proj.authors]:
+    if current_user.id not in [author.id for author in proj.authors]:
         return abort(403)
     proj.delete(db)
     return redirect(url_for('project.list'))

@@ -24,7 +24,6 @@ class CustomModel(db.Model):
     def delete(self, database):
         database.delete(self)
         database.commit()
-        return self
 
     def __repr__(self):
         return f"<Model {self.id}"
