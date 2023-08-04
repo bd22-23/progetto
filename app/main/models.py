@@ -17,14 +17,13 @@ class CustomModel(db.Model):
         pass
 
     def save(self, database):
-        database.session.add(self)
-        database.session.commit()
+        database.add(self)
+        database.commit()
         return self
 
     def delete(self, database):
-        database.session.delete(self)
-        database.session.commit()
-        return self
+        database.delete(self)
+        database.commit()
 
     def __repr__(self):
         return f"<Model {self.id}"

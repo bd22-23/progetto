@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, url_for, render_template, request, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash
-from app import db
+from app import get_db_connection
 from app.admin import admin_only
 from app.auth import User
 from app.auth.forms import LoginForm, RegisterForm
@@ -12,6 +12,7 @@ auth = Blueprint('auth', __name__, url_prefix='/auth', template_folder='template
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
+    db = get_db_connection()
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = RegisterForm(request.form)
@@ -35,11 +36,12 @@ def register():
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    db = get_db_connection()
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = db.query(User).filter_by(email=form.email.data).first()
         if user is not None:
             login_user(user)
             current_user.id = user.id
@@ -60,7 +62,8 @@ def login():
 @login_required
 @admin_only
 def delete_user(user_id):
-    user = User.query.filter_by(id=user_id).first()
+    db = get_db_connection()
+    user = db.query(User).filter_by(id=user_id).first()
     user.delete(db)
     return redirect(url_for('main.index'))
 

@@ -36,5 +36,5 @@ class Evaluator(User):
         self.grade = grade if grade is not None else self.grade
         self.bio = bio if bio is not None else self.bio
         self.pronouns = pronouns if pronouns is not None else self.pronouns
-        db.session.commit()
+        db.commit()
         return self

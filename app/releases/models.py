@@ -37,7 +37,7 @@ class Status(enum.Enum):
 
 class Release(CustomModel):
     __tablename__ = 'releases'
-    project_id = Column(UUID(as_uuid=True), ForeignKey('projects.id'), nullable=False)
+    project_id = Column(UUID(as_uuid=True), ForeignKey('projects.id', ondelete='CASCADE'), nullable=False)
     version = Column(String, nullable=False)
     status = Column(Enum(Status, values_callable=lambda x: [str(member.value) for member in Status]), nullable=False)
     documents = relationship('Document', backref='release', lazy=True)
@@ -47,3 +47,9 @@ class Release(CustomModel):
         self.project_id = project_id
         self.version = version
         self.status = status
+
+    def update(self, db, status, version=None):
+        self.version = version if version is not None else self.version
+        self.status = status if status is not None else self.status
+        db.commit()
+        return self

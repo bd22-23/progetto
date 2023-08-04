@@ -10,7 +10,7 @@ class Researcher(User):
     affiliation = Column(String, nullable=False)
     role = Column(String)
     pronouns = Column(String)
-    projects = relationship('Project', secondary='authors', backref='researcher', lazy=True)
+    projects = relationship('Project', secondary='authors', back_populates='researchers', lazy=True)
 
     __mapper_args__ = {
         'polymorphic_identity': 'researcher',
@@ -30,7 +30,7 @@ class Researcher(User):
         self.affiliation = affiliation if affiliation is not None else self.affiliation
         self.role = role if role is not None else self.role
         self.pronouns = pronouns if pronouns is not None else self.pronouns
-        db.session.commit()
+        db.commit()
         return self
 
 
