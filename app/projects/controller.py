@@ -114,7 +114,7 @@ def assign_evaluator(project_id, evaluator_id):
 def delete(project_id):
     db = get_db_connection()
     proj = db.query(Project).filter_by(id=project_id).first()
-    if current_user.id not in [author.id for author in proj.researchers]:
+    if current_user.id not in [researcher.id for researcher in proj.researchers]:
         return abort(403)
     proj.delete(db)
     return redirect(url_for('project.list'))

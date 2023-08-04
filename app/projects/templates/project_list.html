@@ -39,7 +39,7 @@
                             <a class="project-title" href="{{ url_for('project.view', project_id=project.id) }}">{{ project.title }}</a>
                         </h4>
                         <h6 class="mb-3">
-                        {% for author in project.authors %}
+                        {% for author in project.researchers %}
                             <a class="author-list d-flex" href="{{ url_for('researcher.profile', profile_id=author.id) }}">
                                 {{ author.name }} {{ author.surname }}
                             {% if author.id == current_user.id %}

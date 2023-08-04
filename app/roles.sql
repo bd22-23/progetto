@@ -19,7 +19,8 @@ $do$ BEGIN
     ELSE
         BEGIN
             CREATE USER Admin WITH PASSWORD 'password1';
-            GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO Admin;
+            GRANT SELECT, UPDATE, INSERT, DELETE ON ALL TABLES IN SCHEMA public TO Admin;
+            GRANT USAGE ON SCHEMA public TO Admin;
         EXCEPTION
             WHEN duplicate_object THEN RAISE NOTICE 'Admin role was just created by a concurrent transaction';
         END;
@@ -55,6 +56,7 @@ $do$ BEGIN
             GRANT UPDATE(annotations) ON TABLE public.documents TO Evaluator;
             GRANT UPDATE(name, surname, password, email) ON TABLE public.users TO Evaluator;
             GRANT UPDATE(bio, pronouns) ON TABLE public.evaluators TO Evaluator;
+            GRANT DELETE ON TABLE public.releases, public.documents TO Evaluator;
         EXCEPTION
             WHEN duplicate_object THEN RAISE NOTICE 'Evaluator role was just created by a concurrent transaction';
         END;

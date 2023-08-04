@@ -12,7 +12,7 @@ class Project(CustomModel):
     abstract = Column(String, nullable=False)
     researchers = relationship('Researcher', secondary='authors', back_populates='projects', lazy=True)
     tags = relationship('Tag', secondary='project_tags', back_populates='projects', lazy=True)
-    releases = relationship('Release', backref='project', lazy=True)
+    releases = relationship('Release', backref='project', passive_deletes=True, cascade='all, delete', lazy=True)
     evaluator_id = Column(UUID(as_uuid=True), ForeignKey('evaluators.id'), nullable=True)
 
     def __init__(self, title, abstract):

@@ -12,8 +12,11 @@
         {% endif %}
         {% if current_user.id in project.researchers|map(attribute='id') %}
             <div class="g-2">
-                <a href="{{ url_for('project.delete', project_id=project.id) }}" class="btn btn-danger mx-3"><i class="bi bi-trash-fill"></i></a>
-                <button class="btn btn-primary js-edit-button" js-edit-area-id="edit-project"><i class="bi bi-pencil-fill"></i></button>
+                {% if project.releases[-1].status.value == 'accepted' or project.releases[-1].status.value == 'rejected' %}
+                    <a href="{{ url_for('project.delete', project_id=project.id) }}" class="btn btn-danger mx-3"><i class="bi bi-trash-fill"></i></a>
+                {% else %}
+                    <button class="btn btn-primary js-edit-button" js-edit-area-id="edit-project"><i class="bi bi-pencil-fill"></i></button>
+                {% endif %}
             </div>
         {% endif %}
     </div>
@@ -50,11 +53,6 @@
                 </a>
             </p>
         {% endif %}
-        {% if current_user.type == 'evaluator' and not project.evaluator %}
-            <a href="{{ url_for('project.assign_evaluator', project_id=project.id, evaluator_id=current_user.id) }}" class="btn btn-secondary w-100 first-version-btn">
-                <span>Assegnati come Relatore!</span>
-            </a>
-        {% endif %}
         {% if project.releases %}
             {% if not project.releases[-1].status.value == 'accepted' and not project.releases[-1].status.value == 'rejected' %}
                 <div class="mb-2">
@@ -83,6 +81,11 @@
                     <span>Crea la prima Versione!</span>
                 </a>
             {% endif %}
+        {% endif %}
+        {% if current_user.type == 'evaluator' and not project.evaluator %}
+            <a href="{{ url_for('project.assign_evaluator', project_id=project.id, evaluator_id=current_user.id) }}" class="btn btn-secondary w-100 first-version-btn">
+                <span>Assegnati come Relatore!</span>
+            </a>
         {% endif %}
 
         <hr class="solid mb-4">

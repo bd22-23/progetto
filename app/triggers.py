@@ -75,8 +75,8 @@ def delete_old_releases():
         CREATE OR REPLACE FUNCTION check_old_releases()
         RETURNS TRIGGER AS $$
         BEGIN
-            IF OLD.status = 'rejected' OR OLD.status = 'accepted' THEN
-                DELETE FROM releases WHERE project_id = OLD.project_id AND id != OLD.id;
+            IF NEW.status = 'rejected' OR NEW.status = 'accepted' THEN
+                DELETE FROM releases WHERE project_id = NEW.project_id AND id != NEW.id;
             END IF;
             
             RETURN NEW;
