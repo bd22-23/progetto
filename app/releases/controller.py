@@ -42,7 +42,7 @@ def update(project_id, release_id):
     stat = Status(request.form['status'])
     db.query(Release).filter(Release.id == release_id)\
         .update({'status': stat})
-    db.session.commit()
+    db.commit()
     return redirect(url_for('release.view', project_id=project_id, release_id=release_id))
 
 

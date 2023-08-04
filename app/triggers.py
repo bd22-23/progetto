@@ -30,7 +30,7 @@ def project_authors():
             SELECT COUNT(*) INTO num_authors
             FROM authors
             WHERE researcher_id IN (SELECT researcher_id AS id FROM authors WHERE project_id IN
-                (SELECT project_id FROM authors WHERE id = r_id) );
+                (SELECT project_id FROM authors WHERE researcher_id = r_id) );
         
             IF num_authors <= 1 THEN
                 RAISE EXCEPTION 'Non è possibile eliminare il ricercatore perché è l''unico autore collegato ad un progetto.';

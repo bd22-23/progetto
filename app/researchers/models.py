@@ -30,7 +30,7 @@ class Researcher(User):
         self.affiliation = affiliation if affiliation is not None else self.affiliation
         self.role = role if role is not None else self.role
         self.pronouns = pronouns if pronouns is not None else self.pronouns
-        db.session.commit()
+        db.commit()
         return self
 
 

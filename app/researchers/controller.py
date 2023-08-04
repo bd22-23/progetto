@@ -16,10 +16,10 @@ def profile(profile_id):
     db = get_db_connection()
     user = db.query(Researcher)\
         .join(User, User.id == Researcher.id)\
-        .join(Author, Author.researcher_id == Researcher.id)\
-        .join(Project, Project.id == Author.project_id)\
-        .join(ProjectTag, ProjectTag.project_id == Project.id)\
-        .join(Tag, Tag.id == ProjectTag.tag_id)\
+        .outerjoin(Author, Author.researcher_id == Researcher.id)\
+        .outerjoin(Project, Project.id == Author.project_id)\
+        .outerjoin(ProjectTag, ProjectTag.project_id == Project.id)\
+        .outerjoin(Tag, Tag.id == ProjectTag.tag_id)\
         .outerjoin(Release, Release.project_id == Project.id)\
         .filter(Researcher.id == profile_id)\
         .first()

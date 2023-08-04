@@ -34,5 +34,5 @@ def update(document_id):
     data = json.loads(request.data)
     db.query(Document).filter(Document.id == document_id) \
         .update({'annotations': data})
-    db.session.commit()
+    db.commit()
     return redirect(url_for('document.view', document_id=document_id))
