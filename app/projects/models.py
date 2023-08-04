@@ -23,7 +23,7 @@ class Project(CustomModel):
     def update(self, db, title, abstract):
         self.title = title
         self.abstract = abstract
-        db.session.commit()
+        db.commit()
         return self
 
 
@@ -49,7 +49,7 @@ class Tag(CustomModel):
 
     def update(self, db, value):
         self.value = value
-        db.session.commit()
+        db.commit()
         return self
 
 
