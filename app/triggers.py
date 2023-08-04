@@ -23,14 +23,14 @@ def project_authors():
         CREATE OR REPLACE FUNCTION check_authors()
         RETURNS TRIGGER AS $$
         DECLARE
-            researcher_id uuid;
+            r_id uuid;
             num_authors INTEGER;
         BEGIN
-            researcher_id := OLD.id;
+            r_id := OLD.id;
             SELECT COUNT(*) INTO num_authors
             FROM authors
             WHERE researcher_id IN (SELECT researcher_id AS id FROM authors WHERE project_id IN
-                (SELECT project_id FROM authors WHERE researcher_id = id) );
+                (SELECT project_id FROM authors WHERE id = r_id) );
         
             IF num_authors <= 1 THEN
                 RAISE EXCEPTION 'Non è possibile eliminare il ricercatore perché è l''unico autore collegato ad un progetto.';
@@ -86,7 +86,7 @@ def delete_old_releases():
         CREATE OR REPLACE TRIGGER check_old_releases_trigger
         BEFORE UPDATE ON releases
         FOR EACH ROW
-        EXECUTE FUNCTION check_status();
+        EXECUTE FUNCTION check_old_releases();
     ''')
 
 
@@ -131,16 +131,16 @@ def delete_project_rejected():
         CREATE OR REPLACE FUNCTION check_project_rejected()
         RETURNS TRIGGER AS $$
         DECLARE
-            status varchar;
+            stat varchar;
         BEGIN
-            SELECT status INTO status
+            SELECT status INTO stat
             FROM releases
             WHERE created_at = (
                 SELECT MAX(created_at)
                 FROM releases
                 WHERE project_id = id
             );
-            IF(status != 'rejected') THEN
+            IF(stat != 'rejected') THEN
                 RAISE EXCEPTION 'Non puoi eliminare un progetto che non è stato rifiutato';
             END IF;
             
