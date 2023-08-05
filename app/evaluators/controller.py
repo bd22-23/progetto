@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 from app.admin import admin_only
 from app.auth import User
 from app.evaluators import Evaluator
+from app.projects import Project
 from app import get_db_connection
 from app.evaluators.forms import NewProfileForm, EditProfileForm
 
@@ -13,7 +14,10 @@ evaluator = Blueprint('evaluator', __name__, url_prefix='/evaluator', template_f
 @evaluator.route('/profile/<profile_id>', methods=['GET', 'POST'])
 def profile(profile_id):
     db = get_db_connection()
-    user = db.query(Evaluator).join(User, User.id == Evaluator.id).filter_by(id=profile_id).first()
+    user = db.query(Evaluator)\
+        .outerjoin(Project, Project.evaluator_id == Evaluator.id)\
+        .filter(Evaluator.id == profile_id)\
+        .first()
     form = EditProfileForm(user)
     if form.validate_on_submit():
         if current_user.id != user.id:
