@@ -7,6 +7,7 @@ from flask_login import LoginManager, current_user
 from sqlalchemy import text, create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
+from app.indexes import create_indexes
 from app.roles import create_roles
 from app.triggers import create_triggers
 
@@ -110,6 +111,8 @@ def create_app():
     create_roles(app, db)
 
     create_triggers(app, db)
+
+    create_indexes(app, db)
 
     @app.errorhandler(403)
     def handle_unauthorized():
