@@ -4,7 +4,7 @@
 {% endblock %}
 {% block app_content %}
     <h1 class="mb-4">
-        Progetti attivi
+        Progetti
         {% if tag %}
             <span class="badge rounded-pill tag-pill" style="font-size: 20px; display:inline-block; vertical-align: middle;">{{ tag }}</span>
         {% endif %}
@@ -38,16 +38,17 @@
                             {% endif %}
                             <a class="project-title" href="{{ url_for('project.view', project_id=project.id) }}">{{ project.title }}</a>
                         </h4>
-                        <h6 class="mb-3">
-                        {% for author in project.researchers %}
-                            <a class="author-list d-flex" href="{{ url_for('researcher.profile', profile_id=author.id) }}">
-                                {{ author.name }} {{ author.surname }}
-                            {% if author.id == current_user.id %}
-                                <span class="ms-2 badge rounded-pill orange-tag-pill">Tu</span>
-                            {% endif %}
-                            </a>{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                        </h6>
+                        <p class="mb-2">Autori:
+                            {% for author in project.researchers %}
+                                <a href="{{ url_for('researcher.profile', profile_id=author.id) }}">
+                                    {{ author.name }} {{ author.surname }}
+                                    {% if author.id == current_user.id %}
+                                        <span class="badge rounded-pill orange-tag-pill">Tu</span>
+                                    {% endif %}
+                                </a>
+                                {% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
                     </div>
                 </div>
             </div>
