@@ -1,5 +1,4 @@
 from sqlalchemy import Column, UUID, ForeignKey
-
 from app.auth.models import User
 
 

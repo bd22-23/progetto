@@ -1,6 +1,7 @@
 from sqlalchemy import Column, String, ForeignKey, UUID
-
+from sqlalchemy.orm import relationship
 from app.auth.models import User
+from app.main import CustomModel
 
 
 class Researcher(User):
@@ -9,6 +10,7 @@ class Researcher(User):
     affiliation = Column(String, nullable=False)
     role = Column(String)
     pronouns = Column(String)
+    projects = relationship('Project', secondary='authors', back_populates='researchers', lazy=True)
 
     __mapper_args__ = {
         'polymorphic_identity': 'researcher',
@@ -21,11 +23,6 @@ class Researcher(User):
         self.role = role
         self.pronouns = pronouns
 
-    def save(self, db):
-        db.session.add(self)
-        db.session.commit()
-        return self
-
     def update(self, db, name, surname, email, affiliation, role, pronouns):
         self.name = name if name is not None else self.name
         self.surname = surname if surname is not None else self.surname
@@ -33,5 +30,18 @@ class Researcher(User):
         self.affiliation = affiliation if affiliation is not None else self.affiliation
         self.role = role if role is not None else self.role
         self.pronouns = pronouns if pronouns is not None else self.pronouns
-        db.session.commit()
+        db.commit()
         return self
+
+
+class Author(CustomModel):
+    __tablename__ = 'authors'
+    project_id = Column(UUID(as_uuid=True), ForeignKey('projects.id'), primary_key=True)
+    researcher_id = Column(UUID(as_uuid=True), ForeignKey('researchers.id'), primary_key=True)
+
+    def __init__(self, project_id, researcher_id):
+        super().__init__()
+        self.project_id = project_id
+        self.researcher_id = researcher_id
+
+

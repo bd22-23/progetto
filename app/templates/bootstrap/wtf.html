@@ -53,6 +53,19 @@ the necessary fix for required=False attributes, but will also not set the requi
                 </label>
             </div>
         {% endcall %}
+    {%- elif field.type == 'MultiCheckboxField' -%}
+        {% call _hz_form_wrap(horizontal_columns, form_type, True, required=required) %}
+            <div class="mb-3">
+            {% for subfield in field %}
+                <div class="form-check form-check-inline">
+                    {{ subfield(class="form-check-input", **kwargs) }}
+                    <label class="form-check-label" for="{{ subfield.id }}">
+                        {{ subfield.label.text|safe }}
+                    </label>
+                </div>
+            {% endfor %}
+            </div>
+        {% endcall %}
     {%- elif field.type == 'RadioField' -%}
         {# note: A cleaner solution would be rendering depending on the widget,
      this is just a hack for now, until I can think of something better #}
@@ -71,8 +84,13 @@ the necessary fix for required=False attributes, but will also not set the requi
 
         {# note: same issue as above - should check widget, not field type #}
         {% call _hz_form_wrap(horizontal_columns, form_type, True, required=required) %}
-            {{ field(class='btn btn-%s' % button_map.get(field.name, 'secondary'),
-            **field_kwargs) }}
+            {% set extra_classes = field.render_kw['class'] if field.render_kw and field.render_kw['class'] != None else '' %}
+             <button {% if 'js-editable-stop-edit-button' not in extra_classes %}type="submit" {% else %}type="button" {% endif %}class="btn btn-{{ button_map.get(field.name, 'secondary') }} {{ extra_classes }}"
+                    {% for key, value in field_kwargs.items() -%}
+                    {{ ' ' + key + '="' + value + '"' }}
+                    {% endfor -%}>
+                {{ field.label.text|safe }}
+            </button>
         {% endcall %}
     {%- elif field.type == 'FormField' -%}
         {# note: FormFields are tricky to get right and complex setups requiring
@@ -118,23 +136,19 @@ the necessary fix for required=False attributes, but will also not set the requi
                     {%- endfor %}
                 {%- elif field.description -%}
                     {% call _hz_form_wrap(horizontal_columns, form_type, required=required) %}
-                        <p class="help-block">{{field.description|safe}}</p>
+                        <div class="form-text">{{field.description|safe}}</div>
                     {% endcall %}
                 {%- endif %}
             {%- else -%}
+                {% set extra_classes = field.render_kw['class'] if field.render_kw and 'class' in field.render_kw else '' %}
                 {{ field.label(class="form-label") | safe }}
-{#                {% if field.type == 'FileField' %}#}
-{#                    {{field(**kwargs)|safe}}#}
-{#                {% else %}#}
-{#                    {{field(class="form-control form-control-sm", **kwargs)|safe}}#}
-{#                {% endif %}#}
-                {{ field(class="form-control form-control-sm", **kwargs) | safe }}
+                {{ field(class="form-control form-control-sm " + extra_classes, **kwargs) | safe }}
                 {%- if field.errors %}
                     {%- for error in field.errors %}
                         <p class="text-danger">{{ error }}</p>
                     {%- endfor %}
                 {%- elif field.description -%}
-                    <p class="help-block">{{ field.description | safe }}</p>
+                    <div class="form-text">{{ field.description | safe }}</div>
                 {%- endif %}
             {%- endif %}
         </div>
@@ -161,7 +175,7 @@ the necessary fix for required=False attributes, but will also not set the requi
     {%- set _enctype = [] %}
     {%- if enctype is none -%}
         {%- for field in form %}
-            {%- if field.type == 'FileField' %}
+            {%- if field.type == 'FileField' or field.type == 'MultipleFileField' %}
                 {#- for loops come with a fairly watertight scope, so this list-hack is
           used to be able to set values outside of it #}
                 {%- set _ = _enctype.append('multipart/form-data') -%}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}
+    Progetti
+{% endblock %}
+{% block app_content %}
+    <h1 class="mb-4">
+        Progetti dei quali sei relatore
+        {% if tag %}
+            <span class="badge rounded-pill tag-pill" style="font-size: 20px; display:inline-block; vertical-align: middle;">{{ tag }}</span>
+        {% endif %}
+    </h1>
+
+    <div class="search-panel">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="search-input-addon">🔍</span>
+            <input type="text" id="searchInput" class="form-control" placeholder="Cerca..." aria-label="search" aria-describedby="search-input-addon" >
+        </div>
+    </div>
+
+    <div class="projects-list">
+        <ul class="ps-0">
+        {% for project in projects %}
+            <div class="row">
+                <div class="col">
+                    <div class="mb-5">
+                        <p class="mb-2">
+                            {% for tag in project.tags %}
+                                <span class="badge rounded-pill tag-pill">
+                                    <a href="{{ url_for('project.list', tag=tag.value) }}">{{ tag.value }}</a>
+                                </span>
+                            {% endfor %}
+                        </p>
+                        <h4 class="link-underline mb-3">
+                            {% if project.releases %}
+                                <i class="bi bi-{{ project.releases[-1].status.check_icon }} {{ project.releases[-1].status.value }}"></i>
+                            {% else %}
+                                <i class="bi bi-exclamation-circle awaiting-first-version"></i>
+                            {% endif %}
+                            <a class="project-title" href="{{ url_for('project.view', project_id=project.id) }}">{{ project.title }}</a>
+                        </h4>
+                        <h6 class="mb-3">
+                        {% for author in project.researchers %}
+                            <a class="author-list d-flex" href="{{ url_for('researcher.profile', profile_id=author.id) }}">
+                                {{ author.name }} {{ author.surname }}
+                            {% if author.id == current_user.id %}
+                                <span class="ms-2 badge rounded-pill orange-tag-pill">Tu</span>
+                            {% endif %}
+                            </a>{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </ul>
+    </div>
+
+
+    {% block scripts %}
+        {{ super() }}
+        <script>
+            $(document).ready(function () {
+                $('#searchInput').on('input', function () {
+                    const searchText = $(this).val().toLowerCase().trim();
+                    $('.projects-list .row').each(function () {
+                        const title = $(this).find('.project-title').text().toLowerCase();
+                        const authors = $(this).find('.author-list').text().toLowerCase();
+
+                        if (title.includes(searchText) || authors.includes(searchText)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                });
+            });
+        </script>
+    {% endblock %}
+
+{% endblock %}

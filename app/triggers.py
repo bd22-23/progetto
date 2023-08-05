@@ -23,14 +23,14 @@ def project_authors():
         CREATE OR REPLACE FUNCTION check_authors()
         RETURNS TRIGGER AS $$
         DECLARE
-            researcher_id uuid;
+            r_id uuid;
             num_authors INTEGER;
         BEGIN
-            researcher_id := OLD.id;
+            r_id := OLD.id;
             SELECT COUNT(*) INTO num_authors
             FROM authors
-            WHERE researcher_id IN (SELECT researcher_id AS id FROM authors WHERE project IN
-                (SELECT project FROM authors WHERE researcher_id = id) );
+            WHERE researcher_id IN (SELECT researcher_id AS id FROM authors WHERE project_id IN
+                (SELECT project_id FROM authors WHERE researcher_id = r_id) );
         
             IF num_authors <= 1 THEN
                 RAISE EXCEPTION 'Non è possibile eliminare il ricercatore perché è l''unico autore collegato ad un progetto.';
@@ -52,10 +52,10 @@ def check_status_flow():
         CREATE OR REPLACE FUNCTION check_status()
         RETURNS TRIGGER AS $$
         BEGIN
-            IF OLD.status = 'rejected' OR OLD.status = 'accepted' OR old.status = 'returned' THEN
+            IF (OLD.status = 'rejected' OR OLD.status = 'accepted' OR OLD.status = 'returned') THEN
                 RAISE EXCEPTION 'Non è possibile modificare lo stato di una release di un progetto concluso';
             END IF;
-            IF OLD.status = NEW.status THEN
+            IF (NEW.status = OLD.status) THEN
                 RAISE EXCEPTION 'Non è possibile modificare lo stato in sè stesso';
             END IF;
 
@@ -75,18 +75,18 @@ def delete_old_releases():
         CREATE OR REPLACE FUNCTION check_old_releases()
         RETURNS TRIGGER AS $$
         BEGIN
-            IF OLD.status = 'rejected' OR OLD.status = 'accepted' THEN
-                DELETE FROM releases WHERE project = OLD.project AND id != OLD.id;
+            IF NEW.status = 'rejected' OR NEW.status = 'accepted' THEN
+                DELETE FROM releases WHERE project_id = NEW.project_id AND id != NEW.id;
             END IF;
             
-            RETURN OLD;
+            RETURN NEW;
         END;
         $$ LANGUAGE plpgsql;
 
         CREATE OR REPLACE TRIGGER check_old_releases_trigger
         BEFORE UPDATE ON releases
         FOR EACH ROW
-        EXECUTE FUNCTION check_status();
+        EXECUTE FUNCTION check_old_releases();
     ''')
 
 
@@ -95,27 +95,29 @@ def increase_evaluator_grade():
         CREATE OR REPLACE FUNCTION increase_evaluator_grade()
         RETURNS TRIGGER AS $$
         DECLARE
-            evaluator_id uuid;
+            e_id uuid;
             num_releases INTEGER;
         BEGIN
-            SELECT evaluator_id INTO evaluator_id
+            SELECT evaluator_id INTO e_id
             FROM projects
-            WHERE id = NEW.project
+            WHERE id = NEW.project_id
             LIMIT 1;
         
             SELECT COUNT(*) INTO num_releases
             FROM projects
-            WHERE evaluator_id = id;
+            WHERE evaluator_id = e_id;
             
-            IF(num_releases == 15) THEN
+            IF (num_releases = 15) THEN
                 UPDATE evaluators
                 SET grade = 'intermediate'
-                WHERE id = evaluator_id;
-            ELSIF(num_releases == 50) THEN
+                WHERE id = e_id;
+            ELSIF (num_releases = 50) THEN
                 UPDATE evaluators
                 SET grade = 'expert'
-                WHERE id = evaluator_id;
+                WHERE id = e_id;
             END IF;
+            
+            RETURN NEW;
         END;
         $$ LANGUAGE plpgsql;
 
@@ -131,16 +133,16 @@ def delete_project_rejected():
         CREATE OR REPLACE FUNCTION check_project_rejected()
         RETURNS TRIGGER AS $$
         DECLARE
-            status varchar;
+            stat varchar;
         BEGIN
-            SELECT status INTO status
+            SELECT status INTO stat
             FROM releases
             WHERE created_at = (
                 SELECT MAX(created_at)
                 FROM releases
-                WHERE project = id
+                WHERE project_id = id
             );
-            IF(status != 'rejected') THEN
+            IF(stat != 'rejected') THEN
                 RAISE EXCEPTION 'Non puoi eliminare un progetto che non è stato rifiutato';
             END IF;
             

@@ -19,7 +19,8 @@ $do$ BEGIN
     ELSE
         BEGIN
             CREATE USER Admin WITH PASSWORD 'password1';
-            GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO Admin;
+            GRANT SELECT, UPDATE, INSERT, DELETE ON ALL TABLES IN SCHEMA public TO Admin;
+            GRANT USAGE ON SCHEMA public TO Admin;
         EXCEPTION
             WHEN duplicate_object THEN RAISE NOTICE 'Admin role was just created by a concurrent transaction';
         END;
@@ -31,11 +32,13 @@ $do$ BEGIN
         BEGIN
             CREATE USER Researcher WITH PASSWORD 'password2';
             GRANT AppUser TO Researcher;
-            GRANT INSERT ON TABLE public.projects, public.releases, public.documents, public.authors, public.project_tags TO Researcher;
-            GRANT DELETE ON TABLE public.researchers, public.projects TO Researcher;
+            GRANT INSERT ON TABLE public.projects, public.releases, public.documents,
+                public.authors, public.project_tags TO Researcher;
+            GRANT DELETE ON TABLE public.researchers, public.projects, public.releases,
+                public.project_tags, public.documents, public.authors TO Researcher;
             GRANT UPDATE(title, abstract) ON TABLE public.projects TO Researcher;
             GRANT UPDATE(name, surname, password, email) ON TABLE public.users TO Researcher;
-            GRANT UPDATE(pronouns, affiliation) ON TABLE public.researchers TO Researcher;
+            GRANT UPDATE(affiliation, role, pronouns) ON TABLE public.researchers TO Researcher;
             -- Update dei tag dei progetti? Per ora non si può fare
         EXCEPTION
             WHEN duplicate_object THEN RAISE NOTICE 'Researcher role was just created by a concurrent transaction';
@@ -53,6 +56,7 @@ $do$ BEGIN
             GRANT UPDATE(annotations) ON TABLE public.documents TO Evaluator;
             GRANT UPDATE(name, surname, password, email) ON TABLE public.users TO Evaluator;
             GRANT UPDATE(bio, pronouns) ON TABLE public.evaluators TO Evaluator;
+            GRANT DELETE ON TABLE public.releases, public.documents TO Evaluator;
         EXCEPTION
             WHEN duplicate_object THEN RAISE NOTICE 'Evaluator role was just created by a concurrent transaction';
         END;

@@ -1,7 +1,5 @@
 from flask_login import UserMixin
-
 from sqlalchemy import Column, String
-
 from app import login_manager
 from app.main import CustomModel
 
@@ -32,7 +30,3 @@ class User(CustomModel, UserMixin):
         self.surname = surname
         self.email = email
         self.password = password
-
-    def delete(self, db):
-        db.session.delete(self)
-        db.session.commit()
