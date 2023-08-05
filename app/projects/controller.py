@@ -21,7 +21,7 @@ def list():
     tag = request.args.get('tag')
     query = db.query(Project) \
         .join(Researcher, Project.researchers) \
-        .join(Tag, Project.tags) \
+        .outerjoin(Tag, Project.tags) \
         .outerjoin(Release, Release.project_id == Project.id) \
         .filter(ProjectTag.project_id == Project.id)
     if tag:
@@ -44,7 +44,7 @@ def view(project_id):
     db = get_db_connection()
     proj = db.query(Project) \
         .join(Researcher, Project.researchers) \
-        .join(Tag, Project.tags) \
+        .outerjoin(Tag, Project.tags) \
         .outerjoin(Evaluator, Evaluator.id == Project.evaluator_id) \
         .outerjoin(Release, Release.project_id == Project.id) \
         .filter(Project.id == project_id) \
