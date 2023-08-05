@@ -59,4 +59,4 @@ class EditProjectForm(FlaskForm):
             self.title.data = project.title
             self.abstract.data = project.abstract
             self.tags.data = [str(tag.id) for tag in project.tags]
-            self.authors.data = [str(author.id) for author in project.authors]
+            self.authors.data = [str(author.id) for author in project.researchers]

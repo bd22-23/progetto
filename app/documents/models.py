@@ -7,7 +7,7 @@ class Document(CustomModel):
     __tablename__ = 'documents'
     path = Column(String, nullable=False)
     annotations = Column(JSON, nullable=False)
-    release_id = Column(UUID(as_uuid=True), ForeignKey('releases.id'), nullable=False)
+    release_id = Column(UUID(as_uuid=True), ForeignKey('releases.id', ondelete='CASCADE'), nullable=False)
 
     def __init__(self, path, release_id, annotations=None):
         super().__init__()

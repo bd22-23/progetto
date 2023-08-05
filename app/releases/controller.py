@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, curren
 from sqlalchemy import desc
 from werkzeug.utils import secure_filename
 
-from app import db
+from app import get_db_connection
 from app.releases import Release
 from app.releases import ReleaseForm
 from app.releases import Status
@@ -24,7 +24,8 @@ def convert_pdf_to_data_url(pdf_path):
 
 @release.route('/<project_id>/view/<release_id>', methods=['GET', 'POST'])
 def view(project_id, release_id):
-    rel = Release.query\
+    db = get_db_connection()
+    rel = db.query(Release)\
         .join(Document, Document.release_id == Release.id)\
         .filter(Release.project_id == project_id)\
         .filter(Release.id == release_id)\
@@ -37,16 +38,18 @@ def view(project_id, release_id):
 
 @release.route('/<project_id>/update/<release_id>', methods=['POST'])
 def update(project_id, release_id):
+    db = get_db_connection()
     stat = Status(request.form['status'])
-    Release.query.filter(Release.id == release_id)\
+    db.query(Release).filter(Release.id == release_id)\
         .update({'status': stat})
-    db.session.commit()
+    db.commit()
     return redirect(url_for('release.view', project_id=project_id, release_id=release_id))
 
 
 @release.route('/<project_id>/new', methods=['GET', 'POST'])
 def new(project_id):
-    last_release = Release.query\
+    db = get_db_connection()
+    last_release = db.query(Release)\
         .filter(Release.project_id == project_id)\
         .order_by(desc(Release.created_at))\
         .first()

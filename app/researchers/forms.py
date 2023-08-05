@@ -21,7 +21,7 @@ class EditResearcherForm(FlaskForm):
         validators=[InputRequired()]
     )
     email = EmailField(
-        'Affiliazione',
+        'Email',
         validators=[InputRequired()]
     )
     pronouns = StringField(
