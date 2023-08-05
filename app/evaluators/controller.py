@@ -5,6 +5,7 @@ from app.admin import admin_only
 from app.auth import User
 from app.evaluators import Evaluator
 from app import db
+from app.projects import Project
 from app.evaluators.forms import NewProfileForm, EditProfileForm
 
 evaluator = Blueprint('evaluator', __name__, url_prefix='/evaluator', template_folder='templates')
@@ -12,7 +13,11 @@ evaluator = Blueprint('evaluator', __name__, url_prefix='/evaluator', template_f
 
 @evaluator.route('/profile/<profile_id>', methods=['GET', 'POST'])
 def profile(profile_id):
-    user = Evaluator.query.join(User, User.id == Evaluator.id).filter_by(id=profile_id).first()
+    user = Evaluator.query\
+        .outerjoin(Project, Project.evaluator_id == Evaluator.id)\
+        .filter(Evaluator.id == profile_id)\
+        .first()
+    print(f"NOME {user.name}")
     form = EditProfileForm(user)
     if form.validate_on_submit():
         if current_user.id != user.id:
